@@ -1,0 +1,31 @@
+tokens=(
+	'NUM', 'RULE', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'R', 'G', 'B', 'AND',
+	'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LESS', 'GREATER', 'POINT'
+	)
+
+t_RULE = r'[a-ZA-Z]+|\x24'
+t_BALL=r'ball'
+t_BOX=r'box'
+t_VOID=r'_'
+t_ROTATION=r'r'
+t_SCALE=r's'
+t_TRANSLATION=r't'
+t_COLOR=r'c'
+t_DEPTH=r'd'
+t_EQUALS=r'='
+t_DDOTE=r':'
+t_X=r'x'
+t_Y=r'y'
+t_Z=r'z'
+t_R=r'r'
+t_G=r'g'
+t_B=r'b'
+t_AND=r'&'
+t_OR=r'\x7C'
+t_POT=r'\x5E'
+t_LBRACKET=r'\x5B'
+t_RBRACKET=r'\x5D'
+t_LESS=r'\x3C'
+t_GREATER=r'\x3E'
+t_POINT=r'\x2E'
+
