@@ -1,0 +1,30 @@
+S = Distinguido
+L = Línea
+E = Elemento
+I = Inicio
+rule= = Regla (asignación)
+rule = Regla (uso)
+T = Transformación
+A = Axis
+C = Color
+
+S'  ->  S$
+S   ->  LS
+S   ->  lambda
+L   ->  IE
+I 	->	rule F = | lambda
+F	->	. | lambda
+P	->	ball | box | _
+E   ->  rule
+E 	-> 	ET
+E   ->  E & E
+E   ->  E | E
+E   ->  E ^ num
+E   ->  < E >
+E   ->  P
+T   ->  lambda
+T   ->  :T'
+T   ->  rA num | cC num | tA num | sA' num | d num
+A   ->  x | y | z
+A'  ->  lambda | A
+C   ->  r | g | b
