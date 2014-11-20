@@ -8,23 +8,49 @@ T = Transformación
 A = Axis
 C = Color
 
-S'  ->  S$
-S   ->  LS
-S   ->  lambda
-L   ->  IE
-I 	->	rule F = | lambda
+INITIAL_AUXILIAR  ->  INITIAL$
+INITIAL   ->  LINE INITIAL
+INITIAL   ->  lambda
+LINE   ->  RULE_HEADER DISY
+RULE_HEADER 	->	rule F = | lambda
 F	->	. | lambda
-P	->	ball | box | _
-E   ->  rule
-E 	-> 	ET
-E   ->  E & E
-E   ->  E | E
-E   ->  E ^ num
-E   ->  < E >
-E   ->  P
-T   ->  lambda
-T   ->  :T'
-T   ->  rA num | cC num | tA num | sA' num | d num
-A   ->  x | y | z
-A'  ->  lambda | A
-C   ->  r | g | b
+
+// Para aritmetica
+EXPR -> TERM ADD EXPR
+EXPR -> TERM SUB EXPR
+EXPR -> TERM
+
+TERM -> FACTOR MULT TERM
+TERM -> FACTOR DIV TERM
+TERM -> FACTOR
+
+FACTOR -> ADD NUM
+FACTOR -> SUB NUM
+FACTOR -> NUM
+FACTOR -> LBRACKET NUM RBRACKET
+
+// Desambiguacion de & y |
+
+DISY   	->  CONJ | DISY
+DISY   	->  CONJ
+
+CONJ   	->  ELEM_FACTOR & CONJ
+CONJ   	->  ELEM_FACTOR
+
+PRIM	->	ball | box | _
+ELEM_FACTOR   	->  < DISY >
+ELEM_FACTOR   	->  [ DISY ]
+ELEM_FACTOR   	->  PRIM
+ELEM_FACTOR 	-> 	ELEM_FACTOR T
+ELEM_FACTOR 	->  rule
+ELEM_FACTOR   	->  ELEM_FACTOR ^ NUM
+
+
+MAYBE_TRANSFORMATION   ->  lambda
+MAYBE_TRANSFORMATION   ->  :TRANSFORMATION
+
+TRANSFORMATION  ->  rx NUM | ry NUM | rz NUM
+TRANSFORMATION	->	tx NUM | ty NUM | tz NUM
+TRANSFORMATION	->	sx NUM | sy NUM | sz NUM | s NUM
+TRANSFORMATION 	->	cr NUM | cg NUM | cb NUM
+TRANSFORMATION	->	d NUM
