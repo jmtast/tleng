@@ -43,10 +43,15 @@ t_GREATER=r'\x3E'
 
 t_POINT=r'\x2E'
 
+t_ignore  = ' \t'
+
 def t_NUM(t):
 	r'\d+(\.\d+)?'
 	t.value = float(t.value)
 	return t
+
+def t_error(t):
+	print "Illegal character '%s'" % t.value[0]
 
 lexer = lex.lex()
 print(lexer)
