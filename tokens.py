@@ -1,8 +1,7 @@
-import sys
 import ply.lex as lex
 
 tokens=(
-	'NUM', 'RULE', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR_R', 'COLOR_G', 'COLOR_B', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'R', 'G', 'B', 'AND', 'ADD', 'SUB', 'MUL', 'DIV', 'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LESS', 'GREATER', 'POINT'
+	'NUM', 'RULE', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR_R', 'COLOR_G', 'COLOR_B', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'R', 'G', 'B', 'AND', 'ADD', 'SUB', 'MUL', 'DIV', 'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LPAREN', 'RPAREN' 'LESS', 'GREATER', 'POINT'
 	)
 
 def t_BALL(t):
@@ -49,6 +48,9 @@ t_POT=r'\x5E'
 t_LBRACKET=r'\x5B'
 t_RBRACKET=r'\x5D'
 
+t_LPAREN=r'\x28'
+t_RPAREN=r'\x29'
+
 t_LESS=r'\x3C'
 t_GREATER=r'\x3E'
 
@@ -65,15 +67,3 @@ def t_error(t):
 	print "Illegal character '%s'" % t.value[0]
 
 lexer = lex.lex()
-#print(lexer)
-
-#ejemplo = open('input1.in')
-ejemplo = open(sys.argv[1])
-
-#lexer.input('ball & ball | ball & ball')
-#lexer.input('2 * 4   	+ 5 * 5 / 6 \n42')
-lexer.input(ejemplo.read())
-while True:
-	tok=lexer.token()
-	if not tok: break
-	print tok
