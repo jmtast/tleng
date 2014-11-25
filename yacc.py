@@ -18,6 +18,10 @@ lexer = lexer.lexer
 #rule2definition_Dict = dict()
 
 
+#def p_initial_line(p):
+#	"initial : line initial"
+
+
 # Elementos transformados
 def p_elem_factor_transform(p):
 	"elem_factor : elem_factor transformation"
@@ -202,6 +206,15 @@ def p_scalar_z(p):
 		space=scale_z(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
+		translation=translation_default()
+	)
+
+def p_depth(p):
+	"transformation : DDOTE DEPTH expr"
+	p[0] = dict(
+		space=spatial_default(),
+		color=color_default(),
+		depth=p[3].valor,
 		translation=translation_default()
 	)
 

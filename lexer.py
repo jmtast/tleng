@@ -1,7 +1,7 @@
 import ply.lex as lex
 
 tokens=(
-	'NUM', 'RULE', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR_R', 'COLOR_G', 'COLOR_B', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'R', 'G', 'B', 'AND', 'ADD', 'SUB', 'MUL', 'DIV', 'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LPAREN', 'RPAREN', 'LESS', 'GREATER', 'POINT'
+	'NUM', 'RULE', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR_R', 'COLOR_G', 'COLOR_B', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'AND', 'ADD', 'SUB', 'MUL', 'DIV', 'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LPAREN', 'RPAREN', 'LESS', 'GREATER', 'POINT'
 	)
 
 def t_NEWLINE(t):
@@ -21,11 +21,7 @@ t_VOID=r'_'
 t_X=r'x'
 t_Y=r'y'
 t_Z=r'z'
-#t_R=r'r'
-#t_G=r'g'
-#t_B=r'b'
 
-#t_RULE = r'[a-zA-Z]+\x2E|[a-zA-Z]+=|\x24'
 t_RULE = r'(x[a-zA-Z]+)|(y[a-zA-Z]+)|(z[a-zA-Z]+)|(r[a-wA-Z][a-zA-Z]*)|(s[a-wA-Z][a-zA-Z]*)|(t[a-wA-Z][a-zA-Z]*)|(c[aA-Z|c-fA-Z|h-qA-Z|s-zA-Z][a-zA-Z]*)|(d[a-zA-Z]+)|([a-b|e-q|u-w|A-Z][a-zA-Z]*)|\x24'
 
 t_ROTATION=r'r'
