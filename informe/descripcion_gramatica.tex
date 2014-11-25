@@ -1,0 +1,118 @@
+$G\ =\ <\ V_N\ ,\ V_T\ ,\ P\ ,\ S\ >$\\
+
+donde:\\
+\begin{itemize}
+\item []$\mathbf{V_N}\ =\ \{ S, H, B, C, D, F, M, N \}$
+\item []$\mathbf{V_T}\ =\ Tokens$
+\item []$\mathbf{S}\ =\ S$
+\item []$\mathbf{P}\ =\ Producciones$
+\end{itemize}
+\subsection{Conjunto de Tokens}
+
+\begin{itemize}
+ \item []$\mathbf{NUM}\ =\ r'\backslash d+(\backslash .\backslash d+)?'$
+ \item []$\mathbf{RULE}\ =\ r'(x[a-zA-Z]+)|(y[a-zA-Z]+)|(z[a-zA-Z]+)|(r[a-wA-Z][a-zA-Z]*)|(s[a-wA-Z][a-zA-Z]*)|(t[a-wA-Z][a-zA-Z]*)|(c[aA-Z|c-fA-Z|h-qA-Z|s-zA-Z][a-zA-Z]*)|(d[a-zA-Z]+)|([a-b|e-q|u-w|A-Z][a-zA-Z]*)|\\x24'
+$
+ \item []$\mathbf{BALL}\ =\ r'ball'$
+ \item []$\mathbf{BOX}\ =\ r'box'$
+ \item []$\mathbf{VOID}\ =\ r'\_'$
+ \item []$\mathbf{ROTATION}\ =\ r'r'$
+ \item []$\mathbf{SCALE}\ =\ r's'$
+ \item []$\mathbf{COLOR_R}\ =\ r'c[\backslash s]*r'$
+ \item []$\mathbf{COLOR_G}\ =\ r'c[\backslash s]*g'$
+ \item []$\mathbf{COLOR_B}\ =\ r'c[\backslash s]*b'$
+ \item []$\mathbf{TRANSLATION}\ =\ r't'$
+ \item []$\mathbf{DEPTH}\ =\ r'd'$
+ \item []$\mathbf{EQUALS}\ =\ r'='$
+ \item []$\mathbf{DDOTE}\ =\ r':'$
+ \item []$\mathbf{X}\ =\ r'x'$
+ \item []$\mathbf{Y}\ =\ r'y'$
+ \item []$\mathbf{Z}\ =\ r'z'$
+ \item []$\mathbf{AND}\ =\ r'\&'$
+ \item []$\mathbf{ADD}\ =\ r'\backslash +'$
+ \item []$\mathbf{SUB}\ =\ r'-'$
+ \item []$\mathbf{MUL}\ =\ r'\backslash *'$
+ \item []$\mathbf{DIV}\ =\ r'/'$
+ \item []$\mathbf{OR}\ =\ r'\backslash x7C'$
+ \item []$\mathbf{POT}\ =\ r'\backslash x5E'$
+ \item []$\mathbf{LBRACKET}\ =\ r'\backslash x5B'$
+ \item []$\mathbf{RBRACKET}\ =\ r'\backslash x5D'$
+ \item []$\mathbf{LPAREN}\ =\ r'\backslash x28'$
+ \item []$\mathbf{RPAREN}\ =\ r'\backslash x29'$
+ \item []$\mathbf{LESS}\ =\ r'\backslash x3C'$
+ \item []$\mathbf{GREATER}\ =\ r'\backslash x3E'$
+ \item []$\mathbf{POINT}\ =\ r'\backslash x2E'$
+\end{itemize}
+
+
+\noindent
+
+
+
+\newpage
+\subsection{Conjunto de Producciones}
+
+%~ S = Distinguido
+%~ L = Línea
+%~ E = Elemento
+%~ I = Inicio
+%~ rule= = Regla (asignación)
+%~ rule = Regla (uso)
+%~ T = Transformación
+%~ A = Axis
+%~ C = Color
+%~ 
+%~ 
+\begin{enumerate}
+\item $INITIAL\_AUXILIAR$ $\rightarrow$ $INITIAL$ \\
+\item $INITIAL$   $\rightarrow$  $LINE INITIAL$ \\
+\item $INITIAL$   $\rightarrow$  $lambda$ \\
+\item $LINE$   $\rightarrow$  $RULE\_HEADER DISY$ \\
+\item $RULE_HEADER$ 	$\rightarrow$	$rule$ F $=\ $ \\
+\item F	 $\rightarrow$	. \textbar  $lambda$ \\
+
+%~ // Para aritmetica
+\item $EXPR$ $\rightarrow$ $TERM$ $ADD$ $EXPR$ \\
+\item $EXPR$ $\rightarrow$ $TERM$ $SUB$ $EXPR$ \\
+\item $EXPR$ $\rightarrow$ $TERM$ \\
+
+\item $TERM$ $\rightarrow$ $FACTOR$ $MULT$ $TERM$\\
+\item $TERM$ $\rightarrow$ $FACTOR$ $DIV$ $TERM$\\
+\item $TERM$ $\rightarrow$ $FACTOR$\\
+
+\item $FACTOR$ $\rightarrow$ $ADD$ $NUM$ \\
+\item $FACTOR$ $\rightarrow$ $SUB$ $NUM$ \\
+\item $FACTOR$ $\rightarrow$ $NUM$ \\
+\item $FACTOR$ $\rightarrow$ $LBRACKET$ $EXPR$ $RBRACKET$\\
+
+%~ // Desambiguacion de & y |
+
+\item $DISY$   	$\rightarrow$  $CONJ$ \textbar $DISY$ \\
+\item $DISY$   	$\rightarrow$  $CONJ$ \\
+
+\item $CONJ$   	$\rightarrow$  $ELEM\_FACTOR$ \& $CONJ$ \\
+\item $CONJ$   	$\rightarrow$  $ELEM\_FACTOR$ \\
+
+\item $PRIM$	$\rightarrow$	$ball$ \textbar $box$ \textbar \_ \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $<$ $DISY$ $>$ \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  [ $DISY$ ] \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $PRIM$ \\
+\item $ELEM\_FACTOR$ 	$\rightarrow$  $ELEM\_FACTOR$ T \\
+\item $ELEM\_FACTOR$ 	$\rightarrow$  $rule$ \\
+%~ \item $ELEM\_FACTOR$   	$\rightarrow$  $ELEM\_FACTOR$ \^ $NUM$\\
+
+
+\item $MAYBE_TRANSFORMATION$   $\rightarrow$  $lambda$ \\
+\item $MAYBE_TRANSFORMATION$   $\rightarrow$  :$TRANSFORMATION$ \\
+
+\item $TRANSFORMATION$  $\rightarrow$   $rx$ $NUM$ \textbar $ry$ $NUM$ \textbar $rz$ $NUM$ \\
+\item $TRANSFORMATION$	$\rightarrow$	$tx$ $NUM$ \textbar $ty$ $NUM$ \textbar $tz$ $NUM$ \\
+\item $TRANSFORMATION$	$\rightarrow$	$sx$ $NUM$ \textbar $sy$ $NUM$ \textbar $sz$ $NUM$ \textbar $s$ $NUM$ \\
+\item $TRANSFORMATION$ 	$\rightarrow$	$cr$ $NUM$ \textbar $cg$ $NUM$ \textbar $cb$ $NUM$ \\
+\item $TRANSFORMATION$	$\rightarrow$	$d$  $NUM$ \\
+
+
+
+\end{enumerate}
+
+\noindent
