@@ -11,7 +11,7 @@ def color_default():
 def depth_default():
 	return 100
 
-def translation_default():
+def traslation_default():
 	return num.zeros((4,4))
 
 # Funcion para pasar de Grados a Radianes
@@ -62,17 +62,17 @@ def col_r(b):
 	return num.array([1,1,b])
 
 # Funciones para modificar la translacion
-def trans_x(x):
+def tras_x(x):
 	res = num.zeros((4,4))
 	res[0][3] = x
 	return res
 
-def trans_y(y):
+def tras_y(y):
 	res = num.zeros((4,4))
 	res[1][3] = y
 	return res
 
-def trans_z(z):
+def tras_z(z):
 	res = num.zeros((4,4))
 	res[2][3] = z
 	return res

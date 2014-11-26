@@ -1,17 +1,19 @@
 from yacc import parser
 import sys
 
+from lexer import lexer
+
 ejemplo = open(sys.argv[1])
 s = ejemplo.read()
-#input_token = list()
+#lexer.input(s)
 #
 #while (True):
 #	tc = lexer.token()
 #	if not tc: break
-#	input_token.append(tc)
-#
+#	print tc
+
 #parser.parse(input_token)	
 
 
 result = parser.parse(s)
-print result
+#print result
