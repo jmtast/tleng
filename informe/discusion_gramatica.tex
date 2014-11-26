@@ -1,0 +1,36 @@
+\subsection{Decisiones tomadas}
+
+Al generar la gram\'atica detallada anteriormente se debieron tomar las siguientes decisiones:
+
+\begin{itemize}
+\item[•] Se decidi\'o definir los tokens \textbf{COLOR\_R}, \textbf{COLOR\_G} y  \textbf{COLOR\_B}, con la expresión regular incluyendo la letra del color, para evitar ambiguedades tales como, por ejemplo el \textbf{\" r \" } pueda ser considerada describiendo una rotación o el color red.
+
+\item[•] Para los caracteres que podr\'ian llegar a tener conflicto, como por ejemplo los par\'entesis o los corchetes, se decidi\'o utilizar el c\'odigo de dicho caracter en \textbf{UNICODE}, ya que los mismos son considerados caracteres especiales.
+
+\end{itemize}
+
+\subsection{Comentarios sobre algunos tokens}
+\begin{itemize}
+\item[•] $\mathbf{RULE}$: Este token se decidi\'o definir con esa uni\'on de expresiones regulares porque, de no ser de esa manera, pod\'ia tener conflictos con otras definiciones de tokens, como por ej\'emplo las transformaciones o las rotaciones, pues una regla podr\'ia consistir de un \" r = \". M\'as adelante se detalla un problema espec\'ifico que se encontr\'o al momento de implementarlo con \textbf{PLY}. %agregar referencia.
+\item[•] $\mathbf{OR}$
+\item[•] $\mathbf{POT}$
+\item[•] $\mathbf{LBRACKET}$
+\item[•] $\mathbf{RBRACKET}$
+\item[•] $\mathbf{LPAREN}$
+\item[•] $\mathbf{RPAREN}$
+\item[•] $\mathbf{LESS}$
+\item[•] $\mathbf{GREATER}$
+\item[•] $\mathbf{POINT}$
+
+
+ \item []$\mathbf{OR}\ =\ r'\backslash x7C'$ El s\'imbolo \" x7C \" hace referencia al caracter \" \textbar \" en unicode.
+ \item []$\mathbf{POT}\ =\ r'\backslash x5E'$
+ \item []$\mathbf{LBRACKET}\ =\ r'\backslash x5B'$
+ \item []$\mathbf{RBRACKET}\ =\ r'\backslash x5D'$
+ \item []$\mathbf{LPAREN}\ =\ r'\backslash x28'$
+ \item []$\mathbf{RPAREN}\ =\ r'\backslash x29'$
+ \item []$\mathbf{LESS}\ =\ r'\backslash x3C'$
+ \item []$\mathbf{GREATER}\ =\ r'\backslash x3E'$
+ \item []$\mathbf{POINT}\ =\ r'\backslash x2E'$
+
+\end{itemize}
