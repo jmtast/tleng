@@ -1,0 +1,38 @@
+\subsection{Herramientas utilizadas}
+
+Para la implemetaci\'on del analizador l\'exico y sint\'actico de la gram\'atica propuesta, se decidi\'o utilizar las herramientas propuestas por la c\'atedra. Las mismas son:
+
+\begin{itemize}
+
+\item [] \textbf{PLY}: \href{http://www.dabeaz.com/ply/}{Python Lex Yacc} es una implementaci\'on de las herramientas \textbf{Lex} \textbf{Yacc}
+%\href{http://www.wikibooks.org}{Lex} y \href{http://www.wikibooks.org}{Yacc} en pyhton.
+
+\item [] \textbf{VPython}: \href{http://vpython.org/index.html}{Visual Python} es una herramienta para programaci\'on gr\'afica.
+
+\end{itemize}
+
+\subsection{Decisiones para la implementaci\'on}
+
+Para la correcta implemetaci\'on del analizador l\'exico se tuvo en cuenta la forma en que \href{http://www.dabeaz.com/ply/ply.html#ply_nn3}{PLex} evalua el orden de los tokens, ya que toma la expresi\'on regular de mayor longitud, y luego las dem\'as en orden aleatorio. Esto tra\'ia problemas al analizar ciertas experesiones, tales como \textbf{ball}, ya que la misma estaba siendo considerada un token \textbf{Rule} porque primero estaba evaluando esa expresi\'on regular, y en particular el lenguaje aceptado por la dicha expresi\'on acepta la cadena $'ball'$. Por ello se decidi\'o forzar a el orden en que eval\'ue ciertas reglas.
+\\
+\\
+Luego, para poder implementar comentarios, y que se pueda ignorar el contenido, se utiliz\'o la notaci\'on de \textbf{t\_ignore} seguido de un nombre declarativo para lo que se desee ignorar, por ej\'emplo en este caso, \textbf{t\_ignore\_comment}.
+\\
+\\
+En el caso de analizador sint\'actico se decidi\'o utilizar un diccionario para guardar las transformaciones de un elemento, en la primer posici\'on del par\'ametro \textbf{p}.
+\\
+\\
+Al momento de poder decir que una expresi\'on es v\'alida, es decir, que pudo pasar por el analizador l\'exico, luego por el sint\'actico y no produjo error, debemos poder ejecutarla correctamente. Para esto se tuvo que tomar otra decisi\'on, ya que la utilizaci\'on de la herramienta visual python por si sola no alcanzaba para los objetivos de este trabajo pr\'actico. Esto se debe a que al momento de mostrar esta expresi\'on, queremos contemplar ciertas probabilidades y relaciones con el \textbf{ \& } u el \textbf{ \textbar } que la herramienta por si sola no contempla. 
+Para ello, se implemento una jerarqu\'ia de clases para poder mostrar acorde a los requerimientos de este trabajo pr\'actico.
+
+
+\subsection{C\'odigo}
+
+El c\'odigo se dividi\'o en 3 archivos principales y uno de auxiliares:
+\begin{itemize}
+\item [] \textbf{lexer.py:} Este archivo contiene la implementaci\'on del analizador l\'exico. Para dicha implementaci\'on se defini\'o la lista de tokens, presentada en la secci\'on de descripci\'on de la gram\'atica, y luego las expresiones regulares para cada token, incluyendo las expresiones de lo que se desea ignorar, como por ejemplo los comentarios. Luego, la llamada a la herramienta a \textbf{lex.lex()} para generar el analizador l\'exico de la gram\'atica propuesta.
+
+\item [] \textbf{yacc.py:} En este archivo se encuentra la implementaci\'on del analizador sint\'actico, que incluye las definiciones de las producciones definidas en la secci\'on de descripci\'on de la gram\'atica. Seg\'un a qu\'e expresi\'on corresponde se define lo que se desea guardar en el diccionario. Por \'ultmo, la llamada a la herramienta \textbf{yacc.yacc()} para generar el analizador sint\'actico. Cabe destacar que para generar el analizador sint\'actico se requiere de la lista de tokens y de analizador l\'exico, por lo que ambos se incluyen del archivo anterior.
+
+\item [] \textbf{functions.py} Este archivo contiene unas funciones auxiliares.
+\end{itemize}
