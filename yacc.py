@@ -1,6 +1,7 @@
 import ply.yacc as yacc
 import lexer
 from functions import *
+from definition import *
 
 import numpy as num
 
@@ -21,7 +22,7 @@ lexer = lexer.lexer
 def p_initial_line(p):
 	"initial : line initial"
 	print "initial : line initial"
-	p[0] = p[1]
+	pass
 
 def p_initial_lambda(p):
 	"initial : line"
@@ -31,12 +32,24 @@ def p_initial_lambda(p):
 #
 #def p_line_rule_disy(p):
 #	"line : rule_header disy"
-#	print "line : rule_header disy"
+	print "line : rule_header disy"
 
 # Producciones para cada definicion de regla
 def p_line_dot(p):
 	"line : RULE POINT EQUALS disy"
 	print "line : RULE POINT EQUALS disy"
+
+	finalRule = p[1] + "_final"
+
+	if (p[1] not in rule2definition_Dict):
+		setearNuevaEntry(p[1],OrDefinition(p[1]))
+
+	rule2definition_Dict[p[1]].OR(p[3])
+
+	if (finalRule not in rule2definition_Dict):
+		setearNuevaEntry(finalRule,OrDefinition(finalRule))
+
+	rule2definition_Dict[finalRule].OR(p[3])
 #	rule2definition_Dict[p[1]] = p[4]['id']
 #	if rule_header not in rule2definition_Dict.keys():
 #		rule2definition_Dict[rule_header] = list()
@@ -46,54 +59,68 @@ def p_line_dot(p):
 def p_line(p):
 	"line : RULE EQUALS disy"
 	print "line : RULE EQUALS disy"
-#	rule2definition_Dict[p[1]] = p[3]['id']
+	if (p[1] not in rule2definition_Dict):
+		nuevaEntry = getNextId()
+		setearNuevaEntry(p[1],OrDefinition(nuevaEntry))
+
+	rule2definition_Dict[p[1]].OR(p[3])
 
 
 # Elementos transformados
 def p_elem_factor_transform(p):
 	"elem_factor : elem_factor transformation"
 	print "elem_factor : elem_factor transformation"
-	print "p1 space:\n", p[1]['space']
-	print "p2 space:\n", p[2]['space']
-	print "p2 trans:\n", p[2]['traslation']
-	p[0]=dict(
-		type=p[1]['type'],
-		space=num.dot(p[2]['space'],p[1]['space']) + p[2]['traslation'],
-		color=num.multiply(p[1]['color'],p[2]['color']),
-		depth=min(p[1]['depth'],p[2]['depth']),
-		traslation=traslation_default()
-	)
+#	print "p1 space:\n", p[1]['space']
+#	print "p2 space:\n", p[2]['space']
+#	print "p2 trans:\n", p[2]['traslation']
+	transformation = Transformation()
+	transformation = transformation.setSpace(p[2]['space'])
+	transformation = transformation.setColor(p[2]['color'])
+	transformation = transformation.setDepth(p[2]['depth'])
+	transformation = transformation.setTraslation(p[2]['traslation'])
+	rule2definition_Dict[p[1]].transform(transformation)
+	p[0] = p[1]
+	#p[0]=dict(
+	#	type=p[1]['type'],
+	#	space=num.dot(p[2]['space'],p[1]['space']) + p[2]['traslation'],
+	#	color=num.multiply(p[1]['color'],p[2]['color']),
+	#	depth=min(p[1]['depth'],p[2]['depth']),
+	#	traslation=traslation_default()
+	#)
 
 # Elementos primitivos
 def p_elem_factor_ball(p):
 	"elem_factor : BALL"
 	print "elem_factor : BALL"
-	p[0]=dict(type="ball",
-		space=spatial_default(),
-		color=color_default(),
-		depth=depth_default(),
-		traslation=traslation_default()
-	)
+	p[0] = BALL()
+	#p[0]=dict(type="ball",
+	#	space=spatial_default(),
+	#	color=color_default(),
+	#	depth=depth_default(),
+	#	traslation=traslation_default()
+	#)
 
 def p_elem_factor_box(p):
 	"elem_factor : BOX"
 	print "elem_factor : BOX"
-	p[0]=dict(type="box",
-		space=spatial_default(),
-		color=color_default(),
-		depth=depth_default(),
-		traslation=traslation_default()
-	)
+	p[0] = BOX()
+	#p[0]=dict(type="box",
+	#	space=spatial_default(),
+	#	color=color_default(),
+	#	depth=depth_default(),
+	#	traslation=traslation_default()
+	#)
 
 def p_elem_factor_void(p):
 	"elem_factor : VOID"
 	print "elem_factor : VOID"
-	p[0]=dict(type="void",
-		space=spatial_default(),
-		color=color_default(),
-		depth=depth_default(),
-		traslation=traslation_default()
-	)
+	p[0] = VOID()
+	#p[0]=dict(type="void",
+	#	space=spatial_default(),
+	#	color=color_default(),
+	#	depth=depth_default(),
+	#	traslation=traslation_default()
+	#)
 
 
 
@@ -103,11 +130,13 @@ def p_elem_factor_void(p):
 def p_disy_conj_disy(p):
 	"disy : conj OR disy"
 	print "disy : conj OR disy"
+	p[0] = rule2definition_Dict[p[1]].OR(p[3])
 	pass
 
 def p_disy_conj(p):
 	"disy : conj"
 	print "disy : conj"
+	p[0] = p[1]
 	pass
 
 
@@ -115,28 +144,35 @@ def p_disy_conj(p):
 def p_conj_elem_conj(p):
 	"conj : elem_factor AND conj"
 	print "conj : elem_factor AND conj"
-	pass
+	p[0] = rule2definition_Dict[p[1]].AND(p[3])
 
-def p_conf_ejem(p):
+def p_conj_ejem(p):
 	"conj : elem_factor"
 	print "conj : elem_factor"
-	pass
+	p[0] = p[1]
 
 ## Formas de definir un element_factor
 def p_elem_factor_menor_mayor(p):
 	"elem_factor : LESS disy GREATER"
 	print "elem_factor : LESS disy GREATER"
-	pass
+	p[0] = rule2definition_Dict[p[2]].LESSGREATER()
 
 def p_elem_factor_corchetes(p):
 	"elem_factor : LBRACKET disy RBRACKET"
 	print "elem_factor : LBRACKET disy RBRACKET"
-	pass
+	p[0] = rule2definition_Dict[p[2]].CORCHETE()
 
 
+def p_elem_factor_rule(p):
+	"elem_factor : RULE"
+	print "elem_factor : RULE"
+	p[0] = RULE(p[1])
 
 
-
+def p_elem_factor_pot(p):
+	"elem_factor : elem_factor POT expr"
+	print "elem_factor : elem_factor POT expr"
+	p[0] = rule2definition_Dict[p[1]].POT(p[3]['valor'])
 
 
 
@@ -281,7 +317,7 @@ def p_depth(p):
 	p[0] = dict(
 		space=spatial_default(),
 		color=color_default(),
-		depth=p[3].valor,
+		depth=p[3]['valor'],
 		traslation=traslation_default()
 	)
 

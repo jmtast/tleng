@@ -3,6 +3,9 @@ import sys
 
 from lexer import lexer
 
+from definition import *
+from transformation import *
+
 ejemplo = open(sys.argv[1])
 s = ejemplo.read()
 #lexer.input(s)
@@ -17,3 +20,6 @@ s = ejemplo.read()
 
 result = parser.parse(s)
 #print result
+
+if ("$" in rule2definition_Dict):
+	rule2definition_Dict['$'].show(Transformation())

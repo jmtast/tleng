@@ -39,13 +39,9 @@ class Definition:
 		setearNuevaEntry(nuevaEntry,LessGreaterDefinition(self.id,nuevaEntry) )
 		return nuevaEntry
 
-
 	def transform(self, transf):
 		self.transformation = self.transformation.transform(transf)
 
-#	def show(self, profundidad):
-#		pass
-#
 	def showPot(n, tranformation):
 		for i in range(1,n):
 			self.show(profundidad, transformation)
@@ -68,9 +64,17 @@ class OrDefinition(Definition):
 		return nextId
 
 	def show(self, transformation):
+	#	print "\tLa clase | va a mostrarse"
 		self.timesCalled = self.timesCalled+1
 		toshow = randint(1,len(self.rules_list))-1
-		rule2definition_Dict[self.rules_list[toshow]].show(self.transformation.transform(transformation) )
+		newTransformation = self.transformation.transform(transformation)
+		if (self.timesCalled == newTransformation.getDepth()):
+			if ((str(self.id)+'_final') in rule2definition_Dict):
+				rule2definition_Dict[(str(self.id)+'_final')].show(transformation)
+			else:
+				rule2definition_Dict[self.rules_list[toshow]].show(newTransformation)
+		elif (self.timesCalled < newTransformation.getDepth()):
+			rule2definition_Dict[self.rules_list[toshow]].show(newTransformation)
 
 
 ## AND (&)
@@ -86,9 +90,18 @@ class AndDefinition(Definition):
 		return nextId
 
 	def show(self,transformation):
+	#	print "\tLa clase & va a mostrarse"
 		self.timesCalled = self.timesCalled+1
-		for rule in self.rules_list:
-			rule2definition_Dict[rule].show(self.transformation.transform(transformation))
+		newTransformation = self.transformation.transform(transformation)
+		if (self.timesCalled == newTransformation.getDepth()):
+			if ((str(self.id)+'_final') in rule2definition_Dict):
+				rule2definition_Dict[(str(self.id)+'_final')].show(transformation)
+			else:
+				for rule in self.rules_list:
+					rule2definition_Dict[rule].show(newTransformation)
+		elif (self.timesCalled < newTransformation.getDepth()):
+			for rule in self.rules_list:
+				rule2definition_Dict[rule].show(newTransformation)
 
 ## POT (^N)
 class PotDefinition(Definition):
@@ -101,9 +114,17 @@ class PotDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
+	#	print "\tLa clase ^ va a mostrarse"
 	#	rules_list[0].showPot(profundidad,self.pot)
 		self.timesCalled = self.timesCalled+1
-		rule2definition_Dict[self.rules_list[0]].showPot(self.transformation.transform(transformation))
+		newTransformation = self.transformation.transform(transformation)
+		if (self.timesCalled == newTransformation.getDepth()):
+			if ((str(self.id)+'_final') in rule2definition_Dict):
+				rule2definition_Dict[(str(self.id)+'_final')].show(transformation)
+			else:
+				rule2definition_Dict[self.rules_list[0]].showPot(newTransformation)
+		elif (self.timesCalled < self.transformation.getDepth()):
+			rule2definition_Dict[self.rules_list[0]].showPot(newTransformation.transform(transformation))
 
 # CORCHETE ([E])
 class CorcheteDefinition(Definition):
@@ -115,14 +136,22 @@ class CorcheteDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
+	#	print "\tLa clase [] va a mostrarse"
 		self.timesCalled = self.timesCalled+1
-		rule2definition_Dict[self.rules_list[0]].show(self.transformation.transform(transformation))
+		newTransformation = self.transformation.transform(transformation)
+		if (self.timesCalled == newTransformation.getDepth()):
+			if ((str(self.id)+'_final') in rule2definition_Dict):
+				rule2definition_Dict[(str(self.id)+'_final')].show(transformation)
+			else:
+				rule2definition_Dict[self.rules_list[0]].show(newTransformation)
+		elif (self.timesCalled < newTransformation.getDepth()):
+			rule2definition_Dict[self.rules_list[0]].show(newTransformation)
 
 	def showPot(self, profundidad, n, transformation):
 		otherTransform = Transformation()
 		for i in self.rules_list:
 			otherTransform = otherTransform.transform(transformation)
-			rule2definition_Dict[self.rules_list[0]].show(self.transformation.transform(otherTransform))
+			rule2definition_Dict[self.id].show(self.transformation.transform(otherTransform))
 
 # < E >
 class LessGreaterDefinition(Definition):
@@ -134,12 +163,37 @@ class LessGreaterDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
+	#	print "\tLa clase <> va a mostrarse"
+		self.timesCalled = self.timesCalled+1
 		maybe_show = (randint(1,2) % 2) == 0
-		if (maybe_show):
-			rule2definition_Dict[self.rules_list[0]].show(self.transformation.transform(transformation))
-		else:
-			rule2definition_Dict[VOID()].show(Transformation())
+		newTransformation = self.transformation.transform(transformation)
+		if (self.timesCalled == newTransformation.getDepth()):
+			if ((str(self.id)+'_final') in rule2definition_Dict):
+				rule2definition_Dict[(str(self.id)+'_final')].show(transformation)
+			else:
+				if (maybe_show):
+					rule2definition_Dict[self.rules_list[0]].show(newTransformation)
+				else:
+					rule2definition_Dict[VOID()].show(Transformation())
+		elif (self.timesCalled < newTransformation.getDepth()):
+			if (maybe_show):
+				rule2definition_Dict[self.rules_list[0]].show(newTransformation)
+			else:
+				rule2definition_Dict[VOID()].show(Transformation())
 
+
+class RuleDefinition(Definition):
+	def __init__(self, id, rule):
+		self.id=id
+		self.rule = rule
+		self.rules_list = list()
+		self.transformation = Transformation()
+		self.timesCalled = 0
+
+	def show(self, transformation):
+	#	print "\tLa clase RULE va a mostrarse"
+		newTransformation = self.transformation.transform(transformation)
+		rule2definition_Dict[self.rule].show(newTransformation)
 
 class Void(Definition):
 	def __init__(self,id):
@@ -167,6 +221,8 @@ class Ball(Definition):
 		diry = finalTransformation.getDiry()
 		color = finalTransformation.getColor()
 		size = finalTransformation.getSize()
+		print "mostrando ellipse con transformacion"
+		print finalTransformation.getSpace()
 		visual.ellipsoid(pos=position, size=size, axis=dirx, up=diry, color=color)
 
 class Box(Definition):
@@ -183,6 +239,8 @@ class Box(Definition):
 		diry = finalTransformation.getDiry()
 		color = finalTransformation.getColor()
 		size = finalTransformation.getSize()
+		print "mostrando caja con transformacion"
+		print finalTransformation.getSpace()
 		visual.box(pos=position, size=size, axis=dirx, up=diry, color=color)
 
 def VOID():
@@ -200,6 +258,10 @@ def BOX():
 	setearNuevaEntry(nuevaEntry,Box(nuevaEntry))
 	return nuevaEntry
 
+def RULE(rule):
+	nuevaEntry = getNextId()
+	setearNuevaEntry(nuevaEntry,RuleDefinition(nuevaEntry,rule) )
+	return nuevaEntry
 
 
 
