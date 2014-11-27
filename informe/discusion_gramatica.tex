@@ -3,7 +3,7 @@
 Al generar la gram\'atica detallada anteriormente se debieron tomar las siguientes decisiones:
 
 \begin{itemize}
-\item[•] Se decidi\'o definir los tokens \textbf{COLOR\_R}, \textbf{COLOR\_G} y  \textbf{COLOR\_B}, con la expresión regular incluyendo la letra del color, para evitar ambiguedades tales como, por ejemplo el \textbf{\" r \" } pueda ser considerada describiendo una rotación o el color red.
+\item[•] Se decidi\'o definir los tokens \textbf{COLOR\_R}, \textbf{COLOR\_G} y  \textbf{COLOR\_B}, con la expresión regular incluyendo la letra del color, para evitar ambiguedades tales como, por ejemplo el $mathbf{'r'}$ pueda ser considerada describiendo una rotación o el color red.
 
 \item[•] Para los caracteres que podr\'ian llegar a tener conflicto, como por ejemplo los par\'entesis o los corchetes, se decidi\'o utilizar el c\'odigo de dicho caracter en \textbf{UNICODE}, ya que los mismos son considerados caracteres especiales.
 
@@ -11,26 +11,17 @@ Al generar la gram\'atica detallada anteriormente se debieron tomar las siguient
 
 \subsection{Comentarios sobre algunos tokens}
 \begin{itemize}
-\item[•] $\mathbf{RULE}$: Este token se decidi\'o definir con esa uni\'on de expresiones regulares porque, de no ser de esa manera, pod\'ia tener conflictos con otras definiciones de tokens, como por ej\'emplo las transformaciones o las rotaciones, pues una regla podr\'ia consistir de un \" r = \". M\'as adelante se detalla un problema espec\'ifico que se encontr\'o al momento de implementarlo con \textbf{PLY}. %agregar referencia.
-\item[•] $\mathbf{OR}$
-\item[•] $\mathbf{POT}$
-\item[•] $\mathbf{LBRACKET}$
-\item[•] $\mathbf{RBRACKET}$
-\item[•] $\mathbf{LPAREN}$
-\item[•] $\mathbf{RPAREN}$
-\item[•] $\mathbf{LESS}$
-\item[•] $\mathbf{GREATER}$
-\item[•] $\mathbf{POINT}$
+\item[•] $\mathbf{RULE}$: Este token se decidi\'o definir con esa uni\'on de expresiones regulares porque, de no ser de esa manera, pod\'ia tener conflictos con otras definiciones de tokens, como por ej\'emplo las transformaciones o las rotaciones, pues una regla podr\'ia consistir de un \" r = \". M\'as adelante se detalla un problema espec\'ifico que se encontr\'o al momento de implementarlo con \textbf{PLY}\footnote{Python Lex Yacc}. 
 
-
- \item []$\mathbf{OR}\ =\ r'\backslash x7C'$ El s\'imbolo \" x7C \" hace referencia al caracter \" \textbar \" en unicode.
- \item []$\mathbf{POT}\ =\ r'\backslash x5E'$
- \item []$\mathbf{LBRACKET}\ =\ r'\backslash x5B'$
- \item []$\mathbf{RBRACKET}\ =\ r'\backslash x5D'$
- \item []$\mathbf{LPAREN}\ =\ r'\backslash x28'$
- \item []$\mathbf{RPAREN}\ =\ r'\backslash x29'$
- \item []$\mathbf{LESS}\ =\ r'\backslash x3C'$
- \item []$\mathbf{GREATER}\ =\ r'\backslash x3E'$
- \item []$\mathbf{POINT}\ =\ r'\backslash x2E'$
+\item[•] $\mathbf{OR}\ =\ r'\backslash x7C'$ El s\'imbolo $'\backslash x7C'$ hace referencia al caracter $' \textbar '$ en unicode.
+%~ \item[•] $\mathbf{POT}\ =\ r'\backslash x5E'$ El s\'imbolo $'\backslash x5E'$ hace referencia al caracter $' \textasciicircum '$ en unicode.
+%~ \item[•] $\mathbf{POT}\ =\ r'\backslash x5E'$ El s\'imbolo $'\backslash x5E'$ hace referencia al caracter $' \^{} '$ en unicode.
+\item[•] $\mathbf{LBRACKET}\ =\ r'\backslash x5B'$ En este caso, la referencia al s\'imbolo $'['$ est\'a dada por $'\backslash x5B'$. 
+\item[•] $\mathbf{RBRACKET}\ =\ r'\backslash x5D'$ Similar al caso anterior, el s\'imbolo $']'$ es representado por $'\backslash x5D'$.
+\item[•] $\mathbf{LPAREN}\ =\ r'\backslash x28'$ En este token el s\'imbolo $'\backslash x28'$ referencia al s\'imbolo $'('$. 
+\item[•] $\mathbf{RPAREN}\ =\ r'\backslash x29'$ Similar al anterior el s\'imbolo $')'$ es referenciado por $'\backslash x29'$. 
+\item[•] $\mathbf{LESS}\ =\ r'\backslash x3C'$ En este caso, el s\'imbolo $'\backslash x3C'$ en unicode esta referenciando al s\'imbolo $'<'$. 
+\item[•] $\mathbf{GREATER}\ =\ r'\backslash x3E'$ Similar al caso anterior, el s\'imbolo $'>'$, es referenciado por $'\backslash x3E'$.
+\item[•] $\mathbf{POINT}\ =\ r'\backslash x2E'$ En este caso, el s\'imbolo $'\backslash x2E'$ hace referencia al s\'imbolo $'.'$
 
 \end{itemize}
