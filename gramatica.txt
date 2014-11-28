@@ -1,19 +1,18 @@
-S = Distinguido
-L = Línea
-E = Elemento
-I = Inicio
-rule= = Regla (asignación)
-rule = Regla (uso)
-T = Transformación
-A = Axis
-C = Color
+// Los cambios son los siguientes:
+-1) Ya no existe el no terminal "RULE_HEADER". Lo junte en el no terminal "LINE"
+Tambien separe en 2 casos para la regla final o la no final (regla con el punto). Ahora son 2 opciones para la produccion de LINE
+
+-2) El no terminal "INITIAL" ahora no tiene como opcion derivar en lambda (me traia problemas). Ahora esa opcion la reemplaze por INITIAL -> LINE (ya sé que esto esta forzando a que haya al menos una linea en el programa, pero buen. es lo que hay)
+
+-3) Para los elementos primitivos, ahora no existe el no terminal "PRIM". Lo junte en "ELEM_FACTOR". ELEM_FACTOR puede derivar en ball, box, o _
+
+-4) Desaparecio el no terminal "MAYBE_TRANSFORMATION". El ":" lo agregue al principio de cada produccion de "TRANSFORMATION"
 
 INITIAL_AUXILIAR  ->  INITIAL$
 INITIAL   ->  LINE INITIAL
-INITIAL   ->  lambda
-LINE   ->  RULE_HEADER DISY
-RULE_HEADER 	->	rule F = | lambda
-F	->	. | lambda
+INITIAL   ->  LINE
+LINE  	->  rule = disy
+LINE	->	rule . = disy
 
 // Para aritmetica
 EXPR -> TERM ADD EXPR
@@ -37,20 +36,19 @@ DISY   	->  CONJ
 CONJ   	->  ELEM_FACTOR & CONJ
 CONJ   	->  ELEM_FACTOR
 
-PRIM	->	ball | box | _
 ELEM_FACTOR   	->  < DISY >
 ELEM_FACTOR   	->  [ DISY ]
-ELEM_FACTOR   	->  PRIM
 ELEM_FACTOR 	-> 	ELEM_FACTOR T
 ELEM_FACTOR 	->  rule
-ELEM_FACTOR   	->  ELEM_FACTOR ^ NUM
+ELEM_FACTOR   	->  ELEM_FACTOR ^ expr
+
+ELEM_FACTOR   	->  BALL
+ELEM_FACTOR   	->  BOX
+ELEM_FACTOR   	->  _
 
 
-MAYBE_TRANSFORMATION   ->  lambda
-MAYBE_TRANSFORMATION   ->  :TRANSFORMATION
-
-TRANSFORMATION  ->  rx NUM | ry NUM | rz NUM
-TRANSFORMATION	->	tx NUM | ty NUM | tz NUM
-TRANSFORMATION	->	sx NUM | sy NUM | sz NUM | s NUM
-TRANSFORMATION 	->	cr NUM | cg NUM | cb NUM
-TRANSFORMATION	->	d NUM
+TRANSFORMATION  ->  : rx NUM | : ry NUM | : rz NUM
+TRANSFORMATION	->	: tx NUM | : ty NUM | : tz NUM
+TRANSFORMATION	->	: sx NUM | : sy NUM | : sz NUM | : s NUM
+TRANSFORMATION 	->	: cr NUM | : cg NUM | : cb NUM
+TRANSFORMATION	->	: d NUM
