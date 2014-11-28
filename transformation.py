@@ -53,8 +53,6 @@ class Transformation:
 	def getSize(self):
 		return NP.array([NP.linalg.norm(self.getDirx()),NP.linalg.norm(self.getDiry()),NP.linalg.norm(self.getDirz())])
 
-
-
 	def transform(self,other):
 		nuevaTransformacion = Transformation()
 		nuevaTransformacion.setSpace(NP.dot(other.getSpace(), self.getSpace())+other.getTraslation())

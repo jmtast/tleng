@@ -42,9 +42,9 @@ class Definition:
 	def transform(self, transf):
 		self.transformation = self.transformation.transform(transf)
 
-	def showPot(n, tranformation):
+	def showPot(self, n, transformation):
 		for i in range(1,n):
-			self.show(profundidad, transformation)
+			self.show(transformation)
 
 
 
@@ -64,7 +64,6 @@ class OrDefinition(Definition):
 		return nextId
 
 	def show(self, transformation):
-	#	print "\tLa clase | va a mostrarse"
 		self.timesCalled = self.timesCalled+1
 		toshow = randint(1,len(self.rules_list))-1
 		newTransformation = self.transformation.transform(transformation)
@@ -90,7 +89,6 @@ class AndDefinition(Definition):
 		return nextId
 
 	def show(self,transformation):
-	#	print "\tLa clase & va a mostrarse"
 		self.timesCalled = self.timesCalled+1
 		newTransformation = self.transformation.transform(transformation)
 		if (self.timesCalled == newTransformation.getDepth()):
@@ -114,17 +112,15 @@ class PotDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
-	#	print "\tLa clase ^ va a mostrarse"
-	#	rules_list[0].showPot(profundidad,self.pot)
 		self.timesCalled = self.timesCalled+1
 		newTransformation = self.transformation.transform(transformation)
 		if (self.timesCalled == newTransformation.getDepth()):
 			if ((str(self.id)+'_final') in rule2definition_Dict):
 				rule2definition_Dict[(str(self.id)+'_final')].show(transformation)
 			else:
-				rule2definition_Dict[self.rules_list[0]].showPot(newTransformation)
+				rule2definition_Dict[self.rules_list[0]].showPot(self.pot,newTransformation)
 		elif (self.timesCalled < self.transformation.getDepth()):
-			rule2definition_Dict[self.rules_list[0]].showPot(newTransformation.transform(transformation))
+			rule2definition_Dict[self.rules_list[0]].showPot(self.pot,newTransformation.transform(transformation))
 
 # CORCHETE ([E])
 class CorcheteDefinition(Definition):
@@ -136,7 +132,6 @@ class CorcheteDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
-	#	print "\tLa clase [] va a mostrarse"
 		self.timesCalled = self.timesCalled+1
 		newTransformation = self.transformation.transform(transformation)
 		if (self.timesCalled == newTransformation.getDepth()):
@@ -147,7 +142,7 @@ class CorcheteDefinition(Definition):
 		elif (self.timesCalled < newTransformation.getDepth()):
 			rule2definition_Dict[self.rules_list[0]].show(newTransformation)
 
-	def showPot(self, profundidad, n, transformation):
+	def showPot(self, n, transformation):
 		otherTransform = Transformation()
 		for i in self.rules_list:
 			otherTransform = otherTransform.transform(transformation)
@@ -163,7 +158,6 @@ class LessGreaterDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
-	#	print "\tLa clase <> va a mostrarse"
 		self.timesCalled = self.timesCalled+1
 		maybe_show = (randint(1,2) % 2) == 0
 		newTransformation = self.transformation.transform(transformation)
@@ -191,7 +185,6 @@ class RuleDefinition(Definition):
 		self.timesCalled = 0
 
 	def show(self, transformation):
-	#	print "\tLa clase RULE va a mostrarse"
 		newTransformation = self.transformation.transform(transformation)
 		rule2definition_Dict[self.rule].show(newTransformation)
 
@@ -264,7 +257,7 @@ def RULE(rule):
 	return nuevaEntry
 
 
-
+####
 def getNextId():
 	global nextId
 	nextId = nextId+1
@@ -275,5 +268,6 @@ def setearNuevaEntry(id, definition):
 	rule2definition_Dict[id] = definition
 
 
+###
 nextId = 0
 rule2definition_Dict = dict()

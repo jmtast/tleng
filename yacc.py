@@ -9,16 +9,6 @@ tokens = lexer.tokens
 lexer = lexer.lexer
 
 
-
-# Variables para los estados (space, color, depth) del elemento actual
-#this_spatial = num.identity(4)
-#this_color = num.array([1,1,1])
-#this_depth = 100
-#
-#
-#rule2definition_Dict = dict()
-
-
 def p_initial_initial(p):
 	"initial_auxiliar : initial"
 	pass
@@ -31,9 +21,6 @@ def p_initial_lambda(p):
 	"initial : line"
 	pass
 
-#
-#def p_line_rule_disy(p):
-#	"line : rule_header disy"
 
 # Producciones para cada definicion de regla
 def p_line_dot(p):
@@ -44,16 +31,12 @@ def p_line_dot(p):
 	if (p[1] not in rule2definition_Dict):
 		setearNuevaEntry(p[1],OrDefinition(p[1]))
 
-	rule2definition_Dict[p[1]].OR(p[3])
+	rule2definition_Dict[p[1]].OR(p[4])
 
 	if (finalRule not in rule2definition_Dict):
 		setearNuevaEntry(finalRule,OrDefinition(finalRule))
 
-	rule2definition_Dict[finalRule].OR(p[3])
-#	rule2definition_Dict[p[1]] = p[4]['id']
-#	if rule_header not in rule2definition_Dict.keys():
-#		rule2definition_Dict[rule_header] = list()
-#	rule2definition_Dict[rule_header].append(list('spatial' = ))
+	rule2definition_Dict[finalRule].OR(p[4])
 
 
 def p_line(p):
@@ -75,46 +58,18 @@ def p_elem_factor_transform(p):
 	transformation = transformation.setTraslation(p[2]['traslation'])
 	rule2definition_Dict[p[1]].transform(transformation)
 	p[0] = p[1]
-	#p[0]=dict(
-	#	type=p[1]['type'],
-	#	space=num.dot(p[2]['space'],p[1]['space']) + p[2]['traslation'],
-	#	color=num.multiply(p[1]['color'],p[2]['color']),
-	#	depth=min(p[1]['depth'],p[2]['depth']),
-	#	traslation=traslation_default()
-	#)
 
 # Elementos primitivos
 def p_elem_factor_ball(p):
 	"elem_factor : BALL"
 	p[0] = BALL()
-	#p[0]=dict(type="ball",
-	#	space=spatial_default(),
-	#	color=color_default(),
-	#	depth=depth_default(),
-	#	traslation=traslation_default()
-	#)
-
 def p_elem_factor_box(p):
 	"elem_factor : BOX"
 	p[0] = BOX()
-	#p[0]=dict(type="box",
-	#	space=spatial_default(),
-	#	color=color_default(),
-	#	depth=depth_default(),
-	#	traslation=traslation_default()
-	#)
 
 def p_elem_factor_void(p):
 	"elem_factor : VOID"
 	p[0] = VOID()
-	#p[0]=dict(type="void",
-	#	space=spatial_default(),
-	#	color=color_default(),
-	#	depth=depth_default(),
-	#	traslation=traslation_default()
-	#)
-
-
 
 
 
@@ -156,7 +111,7 @@ def p_elem_factor_rule(p):
 
 def p_elem_factor_pot(p):
 	"elem_factor : elem_factor POT expr"
-	p[0] = rule2definition_Dict[p[1]].POT(p[3]['valor'])
+	p[0] = rule2definition_Dict[p[1]].POT(int(round(p[3]['valor'])))
 
 
 
@@ -205,7 +160,7 @@ def p_traslation_g(p):
 		space=spatial_default(),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=trans_y(p[4]['valor'])
+		traslation=tras_y(p[4]['valor'])
 	)
 
 def p_traslation_b(p):

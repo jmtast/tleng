@@ -55,10 +55,10 @@ def rot_z(z):
 def col_r(r):
 	return num.array([r,1,1])
 
-def col_r(g):
+def col_g(g):
 	return num.array([1,g,1])
 
-def col_r(b):
+def col_b(b):
 	return num.array([1,1,b])
 
 # Funciones para modificar la translacion
