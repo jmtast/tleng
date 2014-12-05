@@ -12,7 +12,7 @@ def depth_default():
 	return 100
 
 def traslation_default():
-	return num.zeros((4,4))
+	return num.identity(4)
 
 # Funcion para pasar de Grados a Radianes
 def degree2radian(deg):
@@ -63,17 +63,17 @@ def col_b(b):
 
 # Funciones para modificar la translacion
 def tras_x(x):
-	res = num.zeros((4,4))
+	res = traslation_default()
 	res[0][3] = x
 	return res
 
 def tras_y(y):
-	res = num.zeros((4,4))
+	res = traslation_default()
 	res[1][3] = y
 	return res
 
 def tras_z(z):
-	res = num.zeros((4,4))
+	res = traslation_default()
 	res[2][3] = z
 	return res
 

@@ -55,7 +55,7 @@ def p_elem_factor_transform(p):
 	transformation = transformation.setSpace(p[2]['space'])
 	transformation = transformation.setColor(p[2]['color'])
 	transformation = transformation.setDepth(p[2]['depth'])
-	transformation = transformation.setTraslation(p[2]['traslation'])
+#	transformation = transformation.setTraslation(p[2]['traslation'])
 	rule2definition_Dict[p[1]].transform(transformation)
 	p[0] = p[1]
 
@@ -123,7 +123,7 @@ def p_rot_x(p):
 		space=rot_x(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_rot_y(p):
@@ -132,7 +132,7 @@ def p_rot_y(p):
 		space=rot_y(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_rot_z(p):
@@ -141,35 +141,38 @@ def p_rot_z(p):
 		space=rot_z(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 ## Transformaciones de traslacion
 def p_traslation_r(p):
 	"transformation : DDOTE TRANSLATION X expr"
 	p[0] = dict(
-		space=spatial_default(),
+	#	space=spatial_default(),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=tras_x(p[4]['valor'])
+	#	traslation=tras_x(p[4]['valor'])
+		space=tras_x(p[4]['valor'])
 	)
 
 def p_traslation_g(p):
 	"transformation : DDOTE TRANSLATION Y expr"
 	p[0] = dict(
-		space=spatial_default(),
+	#	space=spatial_default(),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=tras_y(p[4]['valor'])
+	#	traslation=tras_y(p[4]['valor'])
+		space=tras_y(p[4]['valor'])
 	)
 
 def p_traslation_b(p):
 	"transformation : DDOTE TRANSLATION Z expr"
 	p[0] = dict(
-		space=spatial_default(),
+	#	space=spatial_default(),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=tras_z(p[4]['valor'])
+	#	traslation=tras_z(p[4]['valor'])
+		space=tras_z(p[4]['valor'])
 	)
 
 ## Transformaciones de color
@@ -179,7 +182,7 @@ def p_color_r(p):
 		space=spatial_default(),
 		color=col_r(p[3]['valor']),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_color_g(p):
@@ -188,7 +191,7 @@ def p_color_g(p):
 		space=spatial_default(),
 		color=col_g(p[3]['valor']),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_color_b(p):
@@ -197,7 +200,7 @@ def p_color_b(p):
 		space=spatial_default(),
 		color=col_b(p[3]['valor']),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 # Transformaciones de escalamiento
@@ -207,7 +210,7 @@ def p_scalar(p):
 		space=scale_all_axis(p[3]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_scalar_x(p):
@@ -216,7 +219,7 @@ def p_scalar_x(p):
 		space=scale_x(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_scalar_y(p):
@@ -225,7 +228,7 @@ def p_scalar_y(p):
 		space=scale_y(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_scalar_z(p):
@@ -234,7 +237,7 @@ def p_scalar_z(p):
 		space=scale_z(p[4]['valor']),
 		color=color_default(),
 		depth=depth_default(),
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 def p_depth(p):
@@ -243,7 +246,7 @@ def p_depth(p):
 		space=spatial_default(),
 		color=color_default(),
 		depth=p[3]['valor'],
-		traslation=traslation_default()
+	#	traslation=traslation_default()
 	)
 
 # Producciones para la aritmetica

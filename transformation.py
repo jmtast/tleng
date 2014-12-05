@@ -6,7 +6,7 @@ class Transformation:
 		self.space=spatial_default()
 		self.color=color_default()
 		self.depth=depth_default()
-		self.traslation=traslation_default()
+	#	self.traslation=traslation_default()
 
 	
 	def setSpace(self,otherspace):
@@ -21,13 +21,13 @@ class Transformation:
 		self.depth=otherdepth
 		return self
 
-	def setTraslation(self,othertraslation):
-		self.traslation=othertraslation
-		return self
+#	def setTraslation(self,othertraslation):
+#		self.traslation=othertraslation
+#		return self
 
 
-	def getTraslation(self):
-		return self.traslation
+#	def getTraslation(self):
+#		return self.traslation
 
 	def getDepth(self):
 		return self.depth
@@ -36,16 +36,16 @@ class Transformation:
 		return self.space
 
 	def getDirx(self):
-		return NP.dot(NP.array([1,0,0,0]), self.space)[:3]
+		return NP.dot(self.getSpace(),NP.array([1,0,0,0]) )[:3]
 
 	def getDiry(self):
-		return NP.dot(NP.array([0,1,0,0]), self.space)[:3]
+		return NP.dot(self.getSpace(),NP.array([0,1,0,0]) )[:3]
 
 	def getDirz(self):
-		return NP.dot(NP.array([0,0,1,0]), self.space)[:3]
+		return NP.dot(self.getSpace(),NP.array([0,0,1,0]) )[:3]
 
 	def getPosition(self):
-		return NP.dot(NP.array([0,0,0,1]), self.space)[:3]
+		return NP.dot(self.getSpace(),NP.array([0,0,0,1]) )[:3]
 
 	def getColor(self):
 		return self.color
@@ -55,8 +55,9 @@ class Transformation:
 
 	def transform(self,other):
 		nuevaTransformacion = Transformation()
-		nuevaTransformacion.setSpace(NP.dot(other.getSpace(), self.getSpace())+other.getTraslation())
+	#	nuevaTransformacion.setSpace(NP.dot(other.getSpace(), self.getSpace())+other.getTraslation())
+		nuevaTransformacion.setSpace(NP.dot(other.getSpace(), self.getSpace()))
 		nuevaTransformacion.setColor(NP.multiply(other.getColor(), self.getColor()))
 		nuevaTransformacion.setDepth(min(self.getDepth(), other.getDepth()))
-		nuevaTransformacion.setTraslation(traslation_default())
+	#	nuevaTransformacion.setTraslation(traslation_default())
 		return nuevaTransformacion
