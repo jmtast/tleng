@@ -28,8 +28,8 @@ def rot_x(x):
 	res = num.identity(4)
 	x = float(x)
 	res[1][1] =  cos(degree2radian(x))
-	res[1][2] =  sin(degree2radian(x))
-	res[2][1] = -sin(degree2radian(x))
+	res[1][2] = -sin(degree2radian(x))
+	res[2][1] =  sin(degree2radian(x))
 	res[2][2] =  cos(degree2radian(x))
 	return res
 
@@ -46,8 +46,8 @@ def rot_z(z):
 	res = num.identity(4)
 	z = float(z)
 	res[0][0] =  cos(degree2radian(z))
-	res[0][1] =  sin(degree2radian(z))
-	res[1][0] = -sin(degree2radian(z))
+	res[0][1] = -sin(degree2radian(z))
+	res[1][0] =  sin(degree2radian(z))
 	res[1][1] =  cos(degree2radian(z))
 	return res
 

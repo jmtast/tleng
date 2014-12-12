@@ -1,13 +1,24 @@
 import ply.lex as lex
 
 tokens=(
-	'NUM', 'RULE', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR_R', 'COLOR_G', 'COLOR_B', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'AND', 'ADD', 'SUB', 'MUL', 'DIV', 'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LPAREN', 'RPAREN', 'LESS', 'GREATER', 'POINT'
+	'NUM', 'RULE', 'RULE_SHORT', 'BALL', 'BOX', 'VOID', 'ROTATION', 'SCALE', 'COLOR_R', 'COLOR_G', 'COLOR_B', 'TRANSLATION', 'DEPTH', 'EQUALS', 'DDOTE', 'X', 'Y', 'Z', 'AND', 'ADD', 'SUB', 'MUL', 'DIV', 'OR', 'POT', 'LBRACKET', 'RBRACKET', 'LPAREN', 'RPAREN', 'LESS', 'GREATER', 'POINT'
 	)
 
 
 def t_NEWLINE(t):
 	r'\n+'
 	t.lexer.lineno += t.value.count("\n")
+
+t_VOID=r'_'
+
+t_X=r'x'
+t_Y=r'y'
+t_Z=r'z'
+
+def t_RULE(t):
+#	r'(x[a-zA-Z]+)|(y[a-zA-Z]+)|(z[a-zA-Z]+)|(r[a-wA-Z][a-zA-Z]*)|(s[a-wA-Z][a-zA-Z]*)|(t[a-wA-Z][a-zA-Z]*)|(c[ac-fh-qs-zA-Z][a-zA-Z]*)|(d[a-zA-Z]+)|([ae-qu-wA-Z][a-zA-Z]*)|(ball[a-zA-Z]+)|(box[a-zA-Z]+)|\x24'
+	r'(x[a-zA-Z]+)|(y[a-zA-Z]+)|(z[a-zA-Z]+)|(r[a-wA-Z][a-zA-Z]*)|(s[a-wA-Z][a-zA-Z]*)|(t[a-wA-Z][a-zA-Z]*)|(c[ac-fh-qs-zA-Z][a-zA-Z]*)|(d[a-zA-Z]+)|([ae-qu-wA-Z][a-zA-Z]*)|(ball[a-zA-Z]+)|(box[a-zA-Z]+)|b[^ao][a-zA-Z]*|ba[^l][a-zA-Z]*|bal[^l][a-zA-Z]*|bo[^x][a-zA-Z]*|\x24'
+	return t
 
 def t_BALL(t):
 	r'ball'
@@ -17,13 +28,9 @@ def t_BOX(t):
 	r'box'
 	return t
 
-t_VOID=r'_'
-
-t_X=r'x'
-t_Y=r'y'
-t_Z=r'z'
-
-t_RULE = r'(x[a-zA-Z]+)|(y[a-zA-Z]+)|(z[a-zA-Z]+)|(r[a-wA-Z][a-zA-Z]*)|(s[a-wA-Z][a-zA-Z]*)|(t[a-wA-Z][a-zA-Z]*)|(c[ac-fh-qs-zA-Z][a-zA-Z]*)|(d[a-zA-Z]+)|([a-be-qu-wA-Z][a-zA-Z]*)|\x24'
+def t_RULE_SHORT(t):
+	r'b|ba|bal|bo'
+	return t
 
 t_ROTATION=r'r'
 t_SCALE=r's'

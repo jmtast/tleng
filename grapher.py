@@ -13,3 +13,5 @@ result = parser.parse(s)
 #printing result
 if ("$" in rule2definition_Dict):
 	rule2definition_Dict['$'].show(Transformation())
+
+#print rule2definition_Dict
