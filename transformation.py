@@ -61,3 +61,15 @@ class Transformation:
 		nuevaTransformacion.setDepth(min(self.getDepth(), other.getDepth()))
 	#	nuevaTransformacion.setTraslation(traslation_default())
 		return nuevaTransformacion
+
+	# debugging
+	def mostrar(self):
+		print "Space:"
+		print self.getSpace()
+		print "Color:"
+		print self.getColor()
+		print "Depth:"
+		print self.getDepth()
+
+
+
