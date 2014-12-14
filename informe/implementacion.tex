@@ -13,16 +13,16 @@ Para la implemetaci\'on del analizador l\'exico y sint\'actico de la gram\'atica
 
 \subsection{Decisiones para la implementaci\'on}
 
-Para la correcta implemetaci\'on del analizador l\'exico se tuvo en cuenta la forma en que \href{http://www.dabeaz.com/ply/ply.html#ply_nn3}{PLex} evalua el orden de los tokens, ya que toma la expresi\'on regular de mayor longitud, y luego las dem\'as en orden aleatorio. Esto tra\'ia problemas al analizar ciertas experesiones, tales como \textbf{ball}, ya que la misma estaba siendo considerada un token \textbf{Rule} porque primero estaba evaluando esa expresi\'on regular, y en particular el lenguaje aceptado por la dicha expresi\'on acepta la cadena $'ball'$. Por ello se decidi\'o forzar a el orden en que eval\'ue ciertas reglas.
+Para la correcta implemetaci\'on del analizador l\'exico se tuvo en cuenta la forma en que \href{http://www.dabeaz.com/ply/ply.html#ply_nn3}{PLex} evalua el orden de los tokens, ya que toma la expresi\'on regular de mayor longitud, y luego las dem\'as. Esto tra\'ia problemas al analizar ciertas experesiones, tales como \textbf{ball}, ya que la misma estaba siendo considerada un token \textbf{Rule} porque primero estaba evaluando esa expresi\'on regular, y en particular el lenguaje aceptado por la dicha expresi\'on acepta la cadena $'ball'$. Por ello se decidi\'o forzar a el orden en que eval\'ue ciertas reglas.
 \\
 \\
 Luego, para poder implementar comentarios, y que se pueda ignorar el contenido, se utiliz\'o la notaci\'on de \textbf{t\_ignore} seguido de un nombre declarativo para lo que se desee ignorar, por ej\'emplo en este caso, \textbf{t\_ignore\_comment}.
 \\
 \\
-En el caso de analizador sint\'actico se decidi\'o utilizar un diccionario para guardar las transformaciones de un elemento, en la primer posici\'on del par\'ametro \textbf{p}.
+En el caso de analizador sint\'actico se decidi\'o utilizar un diccionario para guardar las transformaciones de un elemento.
 \\
 \\
-Al momento de poder decir que una expresi\'on es v\'alida, es decir, que pudo pasar por el analizador l\'exico, luego por el sint\'actico y no produjo error, debemos poder ejecutarla correctamente. Para esto se tuvo que tomar otra decisi\'on, ya que la utilizaci\'on de la herramienta visual python por si sola no alcanzaba para los objetivos de este trabajo pr\'actico. Esto se debe a que al momento de mostrar esta expresi\'on, queremos contemplar ciertas probabilidades y relaciones con el \textbf{ \& } u el \textbf{ \textbar } que la herramienta por si sola no contempla. 
+Al momento de poder decir que una expresi\'on es v\'alida, es decir, que pudo pasar por el analizador l\'exico, luego por el sint\'actico y no produjo error, debemos poder ejecutarla correctamente. Para esto se tuvo que tomar otra decisi\'on, ya que la utilizaci\'on de la herramienta visual python por si sola no alcanzaba para los objetivos de este trabajo pr\'actico. Esto se debe a que al momento de mostrar esta expresi\'on, queremos contemplar ciertas probabilidades y relaciones con el \textbf{ \& } o el \textbf{ \textbar } que la herramienta por si sola no contempla. 
 Para ello, se implemento una jerarqu\'ia de clases para poder mostrar acorde a los requerimientos de este trabajo pr\'actico.
 
 
@@ -36,6 +36,10 @@ El c\'odigo se dividi\'o en 3 archivos principales y uno de auxiliares:
 
 \item [] \textbf{definition.py:} Este archivo contiene la implementaci\'on de los procedimientos requeridos para la visualizaci\'on de los resultados, el mismo se implement\'o en una jerarqu\'ia de clases para realizar la visualizaci\'on de los objetosacorde a las probabilidades deseadas, junto con las diferentes formas de visualizar. La clase padre es \textbf{Definition} que contiene una funci\'on para cada forma posible de mostrar objetos. 
 
+\item [] \textbf{transformation.py} Este archivo contiene la definici\'on de la clase Transformation, que representa el conjunto la matriz asociada a la representacion espacial, el arreglo que representa los canales de color (RGB) y la profundidad m\'axima.
+
+\item [] \textbf{dictionaries.py} Este archivo contiene funciones que asocian los elementos primitivos a las representaciones correspondientes definidas como subclases de la clase definitions y funciones que asocian un string a su transformacion.
+
 \item [] \textbf{functions.py} Este archivo contiene unas funciones auxiliares.
 \end{itemize}
 
@@ -46,23 +50,63 @@ A continuaci\'on se presenta el c\'odigo contenido en cada archivo.
 
 \lstinputlisting[language=Python,breaklines=true]{../lexer.py}
 
+%revisar nombres de funciones 
+En el c\'odigo previamente mostrado se puede ver la lista de tokens utilizados, luego la expresi\'on regular para cada uno. Se pueden observar, que adem\'as hay unas funciones auxiliares, tales como \textbf{isKeyword} que fueron implementadas para el cambio de la expresi\'on regular de \textbf{RULE}. Las mismas lo que hacen es verificar si un string esta contenido en la lista de keywords, que se corresponden a los antiormente presentados como tokens.
+
 \newpage
 \subsubsection{yacc.py}
 
 \lstinputlisting[language=Python,breaklines=true]{../yacc.py}
+
+En el archivo Python presentado anteriormente se puede observar la implementaci\'on de las reglas sem\'anticas, con el cambio en las reglas de rotaci\'on, 
 
 \newpage
 \subsubsection{definition.py}
 
 \lstinputlisting[language=Python,breaklines=true]{../definition.py}
 
+En el c\'odigo presentado anteriormente se muestran una sucesi\'on de clases implementadas para la visualizaci\'on de las cadenas aceptadas por este lenguaje. Principalmente para tener una representacion arborea del armado de cada definicion.
 
+A continuaci\'on se describe brevemente cada clase y porqu\'e se decidi\'o generar la misma.
+
+\textbf{Class Definition:} La misma es una clase abstracta que define un comportamiento gen\'erico y sus subclases 
+definiran comportamientos m\'as espec\'ificos seg\'un corresponda, si cada subclase tiene una transformaci\'on asociada y se le puede aplicar transformaci\'on.
+\textbf{Class ANDDefinition:}Esta clase representa una lista de conjunciones de definiciones, cuando se deseamostrar esta definicione, el comportaminto esperado es que se muestre cada una de las definiciones de dicha lista.
+\textbf{Class ORDefinition:} Similar al caso anterior, esta clase representa una lista de disyunciones de definiciones y al querer mostrar dicha lista el comportamiento deseado es que se elija aleatoriamente un elemento de la lista y se muestre dicha definicion.
+\textbf{Class POWDefinition:}Esto representa el caso de una definicion elevada a la N, el comportamiento esperado al mistrar esta definicion va a depeder de la definicion sobre la que habla, ya que va a ser una instancia de alguna de las clases anteriores y acorde a cual sea se definir\'a su comportamiento.
+\textbf{Class CorcheteDefinition:} Esta clase representa una defincion entre corchetes, por lo que al igual que la clase descripta anteriormente va a definir el comportamiento la instancia de la definicion que est\'a contenida entre los corchetes.
+\textbf{Class RULEDefinition:} La misma representa cuando una definicion hace referencia a un nombre de regla definida. 
+\textbf{Class LessGRaterDefinition:} Esta clase representa a una definicion entre $<>$
+\textbf{Class VOID:} Representa el elemento primitivo \_
+\textbf{Class BALL:} Representa el elemento primitivo ball.
+\textbf{Class BOX:}  Representa el elemento primitivo box.
+%AGREGAR EJEMPLOS DE INPUT y como es el arbol uno chiquito y ademas uno de corchete y pow
+\newpage
+\subsubsection{transformation.py}
+
+\lstinputlisting[language=Python,breaklines=true]{../transformation.py}
+
+El c\'odigo recientemente presentado muestra la clase Transformation, que como se dijo anteriormente representa en conjunto la matriz de representacion espacial,vector de canales de colores rgb, y la profundidad maxima.
+A una instancia de esta clase se le puede aplicar una transformacion con otra instancia de la misma clase. El resultado de dicha operacion es la siguiente:
+Supongamos 2 instancias t1 y t2, y la operacion es t1.transform(t2)
+\begin{itemize}
+\item [] La matriz de representacion espacial resultante es premultiplicar la matriz de t1 por la matriz de t2. 
+\item [] Con respecto al vector de colores, es el producto interno de ambos vectores.
+\item [] La profundidad m\'axima resultante es la minima entre la de t1 y t2. 
+\end{itemize}
+
+\newpage
+\subsubsection{dictionaries.py}
+
+\lstinputlisting[language=Python,breaklines=true]{../dictionaries.py}
 \newpage
 \subsubsection{functions.py}
 
 \lstinputlisting[language=Python,breaklines=true]{../functions.py}
 
-
 \newpage
 \subsubsection{Modo de uso}
-
+El programa se utiliza por medio de una consola de comandos, de la siguiente manera:\\
+\textbf{ python [nombre] [pathArchivo]} \\ 
+Donde [nombre] se cambia por: \textbf{grapher.py}
+y [pathArchivo] se cambia por el archivo a ejecutar.

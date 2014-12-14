@@ -2,8 +2,10 @@ $G\ =\ <\ V_N\ ,\ V_T\ ,\ P\ ,\ INITIAL\_AUXILIAR\ >$\\
 
 donde:\\
 \begin{itemize}
-\item []$\mathbf{V_N}\ =\ \{ INITIAL\_AUXILIAR, INITIAL\_AUXILIAR, INITIAL,  LINE, RULE\_HEADER, DISY, rule, F, EXPR, TERM, FACTOR, \\
-CONJ, MAYBE\_TRANSFORMATION, TRANSFORMATION, ELEM\_FACTOR \}$
+%~ \item []$\mathbf{V_N}\ =\ \{ INITIAL\_AUXILIAR, INITIAL\_AUXILIAR, INITIAL,  LINE, RULE\_HEADER, DISY, rule, F, EXPR, TERM, FACTOR, \\
+
+\item []$\mathbf{V_N}\ =\ \{ INITIAL\_AUXILIAR, INITIAL, LINE, DISY, RULE, F, EXPR, TERM, FACTOR, \\
+CONJ, TRANSFORMATION, ELEM\_FACTOR \}$
 
 \item []$\mathbf{V_T}\ =\ Tokens$
 \item []$\mathbf{S}\ =\ S$
@@ -57,10 +59,9 @@ $
 \begin{enumerate}
 \item $INITIAL\_AUXILIAR$ $\rightarrow$ $INITIAL$ \\
 \item $INITIAL$   $\rightarrow$  $LINE$ $INITIAL$ \\
-\item $INITIAL$   $\rightarrow$  $lambda$ \\
-\item $LINE$   $\rightarrow$  $RULE\_HEADER$ $DISY$ \\
-\item $RULE\_HEADER$ 	$\rightarrow$	$rule$ F $=\ $ \\
-\item F	 $\rightarrow$	. \textbar  $lambda$ \\
+\item $INITIAL$   $\rightarrow$  $LINE$ \\
+\item $LINE$   $\rightarrow$  $RULE$ $=$ $DISY$ \\
+\item $LINE$   $\rightarrow$  $RULE$ $.$ $=$ $DISY$ \\
 
 %~ // Para aritmetica
 \item $EXPR$ $\rightarrow$ $TERM$ $ADD$ $EXPR$ \\
@@ -87,20 +88,21 @@ $
 \item $PRIM$	$\rightarrow$	$ball$ \textbar $box$ \textbar \_ \\
 \item $ELEM\_FACTOR$   	$\rightarrow$  $<$ $DISY$ $>$ \\
 \item $ELEM\_FACTOR$   	$\rightarrow$  [ $DISY$ ] \\
-\item $ELEM\_FACTOR$   	$\rightarrow$  $PRIM$ \\
 \item $ELEM\_FACTOR$ 	$\rightarrow$  $ELEM\_FACTOR$ T \\
-\item $ELEM\_FACTOR$ 	$\rightarrow$  $rule$ \\
-%~ \item $ELEM\_FACTOR$   	$\rightarrow$  $ELEM\_FACTOR$ \^ $NUM$\\
+\item $ELEM\_FACTOR$ 	$\rightarrow$  $RULE$ \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $ELEM\_FACTOR$ $\widehat{}$ $EXPR$\\
 
 
-\item $MAYBE\_TRANSFORMATION$   $\rightarrow$  $lambda$ \\
-\item $MAYBE\_TRANSFORMATION$   $\rightarrow$  :$TRANSFORMATION$ \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $BALL$\\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $BOX$\\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $\_$\\
 
-\item $TRANSFORMATION$  $\rightarrow$   $rx$ $NUM$ \textbar $ry$ $NUM$ \textbar $rz$ $NUM$ \\
-\item $TRANSFORMATION$	$\rightarrow$	$tx$ $NUM$ \textbar $ty$ $NUM$ \textbar $tz$ $NUM$ \\
-\item $TRANSFORMATION$	$\rightarrow$	$sx$ $NUM$ \textbar $sy$ $NUM$ \textbar $sz$ $NUM$ \textbar $s$ $NUM$ \\
-\item $TRANSFORMATION$ 	$\rightarrow$	$cr$ $NUM$ \textbar $cg$ $NUM$ \textbar $cb$ $NUM$ \\
-\item $TRANSFORMATION$	$\rightarrow$	$d$  $NUM$ \\
+
+\item $TRANSFORMATION$  $\rightarrow$   :$rx$ $NUM$ \textbar :$ry$ $NUM$ \textbar :$rz$ $NUM$ \\
+\item $TRANSFORMATION$	$\rightarrow$	:$tx$ $NUM$ \textbar :$ty$ $NUM$ \textbar :$tz$ $NUM$ \\
+\item $TRANSFORMATION$	$\rightarrow$	:$sx$ $NUM$ \textbar :$sy$ $NUM$ \textbar :$sz$ $NUM$ \textbar :$s$ $NUM$ \\
+\item $TRANSFORMATION$ 	$\rightarrow$	:$cr$ $NUM$ \textbar :$cg$ $NUM$ \textbar :$cb$ $NUM$ \\
+\item $TRANSFORMATION$	$\rightarrow$	:$d$  $NUM$ \\
 
 
 
