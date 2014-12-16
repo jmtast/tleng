@@ -97,6 +97,27 @@ definiran comportamientos m\'as espec\'ificos seg\'un corresponda, si cada subcl
 
 \end{itemize}
 
+Para una mejor comprensi\'on de lo anteriormente dicho, se puede observar el siguiente ej\'emplo:
+
+\lstinputlisting[language=Python,breaklines=true]{../Ejemplos/eg09b.peg}
+
+\centerline{\includegraphics[scale=0.40]{arboles_derivacion/Ejemplo_and_or1.jpg}}
+
+Este ejemplo debe mostrar, o bien, la parte del AND  (que la misma debe mostrar juntos los dos objetos del AND), o bien, el VOID.
+
+De esta forma se va a obtener la clase padre que va a ser una instancia de ORDefinition y luego, el ANDDefinition, generando en conjunto el comportamiento deseado.
+\\
+\\
+El siguiente ejemplo muestra otro caso, con otros operadores:
+
+\lstinputlisting[language=Python,breaklines=true]{../Ejemplos/eg14.peg}
+
+\centerline{\includegraphics[scale=0.40]{arboles_derivacion/brackets_less_greater1.jpg}}
+
+En este ejemplo se tiene una convinaci\'on de varios operadores de la visualizaci\'on, por un lado, la potenciaci\'on que genera una repetici\'on del elemento al que se le aplica la misma. Por otro lado, los operadores $< >$ que describen un comportamiento opcional en cuanto a la visualizaci\'on, y, por \'ultimo, la agrupación, dada por los $[ ]$ que agrupar\'a, en este caso el efecto de la potenciaci\'on. \\
+En este ejemplo se puede observar que respecto a las clases previamente descriptas, se va a tener una jerarqu\'ia de las mismas generando el comportamiento esperado para este ejemplo.\\
+\\
+
 \newpage
 \subsubsection{transformation.py}
 
@@ -123,6 +144,6 @@ Supongamos 2 instancias t1 y t2, y la operacion es t1.transform(t2)
 \newpage
 \subsubsection{Modo de uso}
 El programa se utiliza por medio de una consola de comandos, de la siguiente manera:\\
-\textbf{ python [nombre] [pathArchivo]} \\ 
+\textbf{ python [nombre] $<$ pathArchivo $>$} \\ 
 Donde [nombre] se cambia por: \textbf{grapher.py}
-y [pathArchivo] se cambia por el archivo a ejecutar.
+y pathArchivo se cambia por el archivo a ejecutar.
