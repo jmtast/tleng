@@ -22,8 +22,10 @@ Luego, para poder implementar comentarios, y que se pueda ignorar el contenido, 
 En el caso de analizador sint\'actico se decidi\'o utilizar un diccionario para guardar las transformaciones de un elemento.
 \\
 \\
-Al momento de poder decir que una expresi\'on es v\'alida, es decir, que pudo pasar por el analizador l\'exico, luego por el sint\'actico y no produjo error, debemos poder ejecutarla correctamente. Para esto se tuvo que tomar otra decisi\'on, ya que la utilizaci\'on de la herramienta visual python por si sola no alcanzaba para los objetivos de este trabajo pr\'actico. Esto se debe a que al momento de mostrar esta expresi\'on, queremos contemplar ciertas probabilidades y relaciones con el \textbf{ \& } o el \textbf{ \textbar } que la herramienta por si sola no contempla. 
-Para ello, se implemento una jerarqu\'ia de clases para poder mostrar acorde a los requerimientos de este trabajo pr\'actico.
+Una vez que se tiene una expresi\'on v\'alida, es decir que pas\'o por el analizador l\'exico, y luego, el sint\'actico, y no produjo error, se desea visualizar dicha expresi\'on, ya que la misma describe un objeto 3D. Para este paso de la visualizaci\'on, se aprovech\'o la herramienta visual python, junto con una jerarqu\'ia de clases que m\'as adelante se describe, que la misma va a representar un comportamiento para l correcta visualizaci\'on de dicho objeto, esto se debe a que en ciertas expresiones que contienen la disyunci\'on de objetos 3D, para la visualizacion del objeto total, a cada objeto dentro de la disyunci\'on le corresponde una probabilidad de ser visualizado. Este comportamiento se engloba en una clase descripta posteriormente.
+%~ 
+%~ Al momento de poder decir que una expresi\'on es v\'alida, es decir, que pudo pasar por el analizador l\'exico, luego por el sint\'actico y no produjo error, debemos poder ejecutarla correctamente. Para esto se tuvo que tomar otra decisi\'on, ya que la utilizaci\'on de la herramienta visual python por si sola no alcanzaba para los objetivos de este trabajo pr\'actico. Esto se debe a que al momento de mostrar esta expresi\'on, queremos contemplar ciertas probabilidades y relaciones con el \textbf{ \& } o el \textbf{ \textbar } que la herramienta por si sola no contempla. 
+%~ Para ello, se implemento una jerarqu\'ia de clases para poder mostrar acorde a los requerimientos de este trabajo pr\'actico.
 
 
 \subsection{C\'odigo}
