@@ -2,7 +2,15 @@
 \item Para mejorar la descripci\'on y entendimiento de algunas expresiones regulares que se eran innecesariamente extensas, se decidi\'o modificar la gram\'atica y su implementaci\'on para que en vez de tratar de evitar, desde la expresion regular, la coincidencia de las primitivas (que ade\'as no funcionaba correctamente porque no permit\'ia que una regla se llamara \textbf{ball}on, ya que el prefijo ball coincide con una primitiva. \\
 Ahora, la modificaci\'on realizada permite tomar un string completo, como por ejemplo \texttt{ballon} y ver si se corresponde con una primitiva, en este caso, no se corresponde por lo que puede ser nombre de una regla.
 
-\item
+\item Respecto al c\'odigo se realizaron arreglos para que funcione con los ejemplos de programa v\'alidos que se muestran en la presentaci\'on de este trabajo pr\'actico. Por ej\'emplo hab\'ia un problema con las definiciones de las rotaciones, que ahora se puede ver que funciona como se deseaba acorde a la presentaci\'on.
+\\
+Se modific\'o el c\'odigo que realiza la visualizaci\'on, ya que anteriormente ten\'ia problemas con la m\'axima rofundidad.
+\\
+Tambi\'en se arregl\'o la forma de multiplicar las matrices en los \texttt{getters} de las clases creadas para la visualizaci\'on, que la descripci\'on de las mismas se encuentra en la secci\'on de implementaci\'on.
+
+
+\item Cambios en la gram\'atica: Se elimin\'o el no terminal \textbf{INITIAL\_AUXILIAR} y las producciones que lo utilizaban, se modificaron los tokens y las algunas producciones.
+
 \end{itemize}
 
 
