@@ -1,0 +1,21 @@
+\begin{itemize}
+\item Para mejorar la descripci\'on y entendimiento de algunas expresiones regulares que se eran innecesariamente extensas, se decidi\'o modificar la gram\'atica y su implementaci\'on para que en vez de tratar de evitar, desde la expresion regular, la coincidencia de las primitivas (que ade\'as no funcionaba correctamente porque no permit\'ia que una regla se llamara \textbf{ball}on, ya que el prefijo ball coincide con una primitiva. \\
+Ahora, la modificaci\'on realizada permite tomar un string completo, como por ejemplo \texttt{ballon} y ver si se corresponde con una primitiva, en este caso, no se corresponde por lo que puede ser nombre de una regla.
+
+\item
+\end{itemize}
+
+
+%~ Para emprolijar algunas expresiones regulares que qnos habian quedado innecesariamente extensas decidimos, modificar la gramatica asociando en keywords algunos tokens. Por ejemplo Ball Box  y void pasaron a ser keywords_tipo y las transformaciones pasaron a estar asociadas en un keywords_transformation.
+%~ De esta manera la lista de tokens queda mas reducible y facil de leer, y lo mismo para sus respectivas expresiones regulares.
+%~ En particular cambio mucho la definicion de regla, pues ahora toma todo un string de caracteres y luego verifica que sea un keyword.
+%~ 
+%~ Respecto al codigo hubo varios arreglos, pues por ejemplo las rotaciones estaban mal, luego, se refactorizo el c\'odigo del show, para un codigo mas reducible y facil de leer.
+%~ la forma de multiplicar de las matrices en la clase de transformation en los geters 
+%~ se arreglo el calculo de la profundidad.
+%~ 
+%~ Se saco el simbolo distinguido "initial_auxiliar" y las respectivas producciones que lo usaban, y esto se ve reflejado en el archivo yacc.py
+%~ 
+%~ Ahora el simbolo distinguido es initial
+%~ 
+%~ Cambiamos el nombre del token por uname para que se entienda que solo es un nombre

@@ -1,44 +1,58 @@
-$G\ =\ <\ V_N\ ,\ V_T\ ,\ P\ ,\ INITIAL\_AUXILIAR\ >$\\
+$G\ =\ <\ V_N\ ,\ V_T\ ,\ P\ ,\ INITIAL\ >$\\
 
 donde:\\
 \begin{itemize}
-%~ \item []$\mathbf{V_N}\ =\ \{ INITIAL\_AUXILIAR, INITIAL\_AUXILIAR, INITIAL,  LINE, RULE\_HEADER, DISY, rule, F, EXPR, TERM, FACTOR, \\
 
-\item []$\mathbf{V_N}\ =\ \{ INITIAL\_AUXILIAR, INITIAL, LINE, DISY, RULE, F, EXPR, TERM, FACTOR, \\
+\item []$\mathbf{V_N}\ =\ \{ INITIAL, LINE, DISY, PRIMITIVE, \\
+RULE, EXPR, TERM, FACTOR, \\
 CONJ, TRANSFORMATION, ELEM\_FACTOR \}$
 
-\item []$\mathbf{V_T}\ =\  \{ NUM, RULE_NAME, EQUALS, DDOT, AND, ADD, SUB, MUL, DIV, OR, POW, LBRACKET, RBRACKET, LPAREN, RPAREN, LESS, GREATER, POINT, PRIMITIVE, TRANSFORMATION\}$
-\item []$\mathbf{S}\ =\ S$
+\item []$\mathbf{V_T}\ =\  \{ NUM, RULE\_NAME, EQUALS, DDOT, \\
+AND, ADD, SUB, MUL, DIV, OR, POW, LBRACKET,\\
+ RBRACKET, LPAREN, RPAREN, LESS, GREATER, POINT, PRIMITIVE, TRANSFORMATION\}$
 \item []$\mathbf{P}\ =\ Producciones$
 \end{itemize}
 \subsection{Conjunto de Tokens}
 
+%~ def t_NEWLINE(t):
+	%~ r'\n+'
+	%~ t.lexer.lineno += t.value.count("\n")
+%~ 
+%~ t_ignore=' \t'
+%~ t_ignore_comment = r'"(\\.|[^\\"])*"'
+
+
 \begin{itemize}
  \item []$\mathbf{NUM}\ =\ r'\backslash d+(\backslash .\backslash d+)?'$
- \item []$\mathbf{RULE}\ =\ r'(x[a-zA-Z]+)|(y[a-zA-Z]+)|(z[a-zA-Z]+)|(r[a-wA-Z][a-zA-Z]*)|(s[a-wA-Z][a-zA-Z]*)|(t[a-wA-Z][a-zA-Z]*)|(c[aA-Z|c-fA-Z|h-qA-Z|s-zA-Z][a-zA-Z]*)|(d[a-zA-Z]+)|([a-b|e-q|u-w|A-Z][a-zA-Z]*)|\\x24'
-$
- \item []$\mathbf{BALL}\ =\ r'ball'$
- \item []$\mathbf{BOX}\ =\ r'box'$
- \item []$\mathbf{VOID}\ =\ r'\_'$
- \item []$\mathbf{ROTATION}\ =\ r'r'$
- \item []$\mathbf{SCALE}\ =\ r's'$
- \item []$\mathbf{COLOR\_R}\ =\ r'c[\backslash s]*r'$
- \item []$\mathbf{COLOR\_G}\ =\ r'c[\backslash s]*g'$
- \item []$\mathbf{COLOR\_B}\ =\ r'c[\backslash s]*b'$
- \item []$\mathbf{TRANSLATION}\ =\ r't'$
- \item []$\mathbf{DEPTH}\ =\ r'd'$
+ %~ \item []$\mathbf{RULE\_NAME}\ =\ r'([a-zA-Z]+)\textbar \$ $\textbar \_ '$
+ 
+ \item []$\mathbf{RULE\_NAME}\ =\ r'([a-zA-Z]+) $\textbar $ $ \$ $ $\textbar \_$ '$
+ \item []$\mathbf{PRIMITIVE}\ =\ r'ball'$
+ \item []$\mathbf{PRIMITIVE}\ =\ r'box'$
+ \item []$\mathbf{PRIMITIVE}\ =\ r'\_'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'tx'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'ty'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'tz'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'rx'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'ry'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'rz'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'sx'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'sy'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'sz'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r's'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'cr'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'cg'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'cb'$
+ \item []$\mathbf{TRANSFORMATION}\ =\ r'd'$
  \item []$\mathbf{EQUALS}\ =\ r'='$
  \item []$\mathbf{DDOTE}\ =\ r':'$
- \item []$\mathbf{X}\ =\ r'x'$
- \item []$\mathbf{Y}\ =\ r'y'$
- \item []$\mathbf{Z}\ =\ r'z'$
- \item []$\mathbf{AND}\ =\ r'\&'$
+ \item []$\mathbf{AND}\ =\ r'\&'$ 
+ \item []$\mathbf{OR}\ =\ r'\backslash x7C'$  
  \item []$\mathbf{ADD}\ =\ r'\backslash +'$
  \item []$\mathbf{SUB}\ =\ r'-'$
  \item []$\mathbf{MUL}\ =\ r'\backslash *'$
  \item []$\mathbf{DIV}\ =\ r'/'$
- \item []$\mathbf{OR}\ =\ r'\backslash x7C'$
- \item []$\mathbf{POT}\ =\ r'\backslash x5E'$
+ \item []$\mathbf{POW}\ =\ r'\backslash x5E'$
  \item []$\mathbf{LBRACKET}\ =\ r'\backslash x5B'$
  \item []$\mathbf{RBRACKET}\ =\ r'\backslash x5D'$
  \item []$\mathbf{LPAREN}\ =\ r'\backslash x28'$
@@ -57,11 +71,24 @@ $
 \subsection{Conjunto de Producciones}
 
 \begin{enumerate}
-\item $INITIAL\_AUXILIAR$ $\rightarrow$ $INITIAL$ \\
 \item $INITIAL$   $\rightarrow$  $LINE$ $INITIAL$ \\
-\item $INITIAL$   $\rightarrow$  $LINE$ \\
-\item $LINE$   $\rightarrow$  $RULE$ $=$ $DISY$ \\
-\item $LINE$   $\rightarrow$  $RULE$ $.$ $=$ $DISY$ \\
+\item $INITIAL$   $\rightarrow$  $LAMBDA$ \\
+\item $LINE$   $\rightarrow$  $RULE\_NAME$ $EQUALS$ $DISY$ \\
+\item $LINE$   $\rightarrow$  $RULE\_NAME$ $POINT$ $EQUALS$ $DISY$ \\
+
+\item $ELEM\_FACTOR$  $\rightarrow$  $ELEM\_FACTOR$ $DDOT$ $TRANSFORMATION$ $EXPR$ \\
+\item $ELEM\_FACTOR$  $\rightarrow$  $PRIMITIVE$ \\
+%~ // Desambiguacion de & y |
+\item $DISY$   	$\rightarrow$  $CONJ$ $OR$ $DISY$ \\
+\item $DISY$   	$\rightarrow$  $CONJ$ \\
+
+\item $CONJ$   	$\rightarrow$  $ELEM\_FACTOR$ $AND$ $CONJ$ \\
+\item $CONJ$   	$\rightarrow$  $ELEM\_FACTOR$ \\
+
+\item $ELEM\_FACTOR$   	$\rightarrow$  $LESS$ $DISY$ $GREATER$ \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $LBRACKET$ $DISY$ $RBRACKET$ \\
+\item $ELEM\_FACTOR$ 	$\rightarrow$  $RULE\_NAME$ \\
+\item $ELEM\_FACTOR$   	$\rightarrow$  $ELEM\_FACTOR$ $POW$ $EXPR$\\
 
 %~ // Para aritmetica
 \item $EXPR$ $\rightarrow$ $TERM$ $ADD$ $EXPR$ \\
@@ -77,34 +104,22 @@ $
 \item $FACTOR$ $\rightarrow$ $NUM$ \\
 \item $FACTOR$ $\rightarrow$ $LBRACKET$ $EXPR$ $RBRACKET$\\
 
-%~ // Desambiguacion de & y |
 
-\item $DISY$   	$\rightarrow$  $CONJ$ \textbar $DISY$ \\
-\item $DISY$   	$\rightarrow$  $CONJ$ \\
+%~ \item $PRIM$	$\rightarrow$	$ball$ \textbar $box$ \textbar \_ \\
+%~ \item $ELEM\_FACTOR$ 	$\rightarrow$  $ELEM\_FACTOR$ T \\
+%~ \item $ELEM\_FACTOR$   	$\rightarrow$  $BALL$\\
+%~ \item $ELEM\_FACTOR$   	$\rightarrow$  $BOX$\\
+%~ \item $ELEM\_FACTOR$   	$\rightarrow$  $VOID$\\
 
-\item $CONJ$   	$\rightarrow$  $ELEM\_FACTOR$ \& $CONJ$ \\
-\item $CONJ$   	$\rightarrow$  $ELEM\_FACTOR$ \\
-
-\item $PRIM$	$\rightarrow$	$ball$ \textbar $box$ \textbar \_ \\
-\item $ELEM\_FACTOR$   	$\rightarrow$  $<$ $DISY$ $>$ \\
-\item $ELEM\_FACTOR$   	$\rightarrow$  [ $DISY$ ] \\
-\item $ELEM\_FACTOR$ 	$\rightarrow$  $ELEM\_FACTOR$ T \\
-\item $ELEM\_FACTOR$ 	$\rightarrow$  $RULE$ \\
-\item $ELEM\_FACTOR$   	$\rightarrow$  $ELEM\_FACTOR$ $\widehat{}$ $EXPR$\\
-
-
-\item $ELEM\_FACTOR$   	$\rightarrow$  $BALL$\\
-\item $ELEM\_FACTOR$   	$\rightarrow$  $BOX$\\
-\item $ELEM\_FACTOR$   	$\rightarrow$  $\_$\\
-
+\item $PRIMITIVE$   	$\rightarrow$  $BALL$\\
+\item $PRIMITIVE$   	$\rightarrow$  $BOX$\\
+\item $PRIMITIVE$   	$\rightarrow$  $VOID$\\
 
 \item $TRANSFORMATION$  $\rightarrow$   :$rx$ $NUM$ \textbar :$ry$ $NUM$ \textbar :$rz$ $NUM$ \\
 \item $TRANSFORMATION$	$\rightarrow$	:$tx$ $NUM$ \textbar :$ty$ $NUM$ \textbar :$tz$ $NUM$ \\
 \item $TRANSFORMATION$	$\rightarrow$	:$sx$ $NUM$ \textbar :$sy$ $NUM$ \textbar :$sz$ $NUM$ \textbar :$s$ $NUM$ \\
 \item $TRANSFORMATION$ 	$\rightarrow$	:$cr$ $NUM$ \textbar :$cg$ $NUM$ \textbar :$cb$ $NUM$ \\
 \item $TRANSFORMATION$	$\rightarrow$	:$d$  $NUM$ \\
-
-
 
 \end{enumerate}
 
