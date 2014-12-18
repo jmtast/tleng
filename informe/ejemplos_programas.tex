@@ -67,13 +67,20 @@ Los siguientes ejemplos fueron ejecutados con el c\'odigo de esta entrega.\\
 
 \subsection{Programas inv\'alidos}
 
+El siguiente ejemplo presenta un error sem\'antico, pues no cumple la regla \texttt{ELEM\_FACTOR -> LBRACKET DISY RBRACKET} ya que falta un corchete. \\
+
 \lstinputlisting[breaklines=true]{../Ejemplos/eg22invalid.peg}
 
 \centerline{\includegraphics[scale=0.70]{../imagenes/eg22invalid.png}}
 
+
+El siguiente ejemplo presenta un error sint\'actico, pues no cumple la primitiva \texttt{box} y eso va a producir que se interprete de otra forma, como por ejemplo una regla, pero al no ser seguida de un igual va a fallar.\\
+
 \lstinputlisting[breaklines=true]{../Ejemplos/eg22invalid2.peg}
 
 \centerline{\includegraphics[scale=0.70]{../imagenes/eg22invalid2.png}}
+
+El ejemplo que se muestra a continuaci\'on contiene un error en los comentarios, ya que uno posee una comilla dentro del comentario que no est\'a escapada.\\
 
 \lstinputlisting[breaklines=true]{../Ejemplos/carainvalid.peg}
 

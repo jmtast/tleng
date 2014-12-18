@@ -1,4 +1,4 @@
-
+"este ejemplo tiene un error sintactico, esta mal escrito box."
 cube =  
 [ [ [ bix : s 0.1 
     ] : tx -0.2 : cr 0.80 ^ 10 
