@@ -12,16 +12,16 @@ Al generar la gram\'atica detallada anteriormente se debieron tomar las siguient
 
 \end{itemize}
 
-\subsection{Comentarios sobre algunos tokens}
-\begin{itemize}
-\item[•] $\mathbf{RULE}$: Este token se decidi\'o definir con esa uni\'on de expresiones regulares porque, de no ser de esa manera, pod\'ia tener conflictos con otras definiciones de tokens, como por ej\'emplo las transformaciones o las rotaciones, pues una regla podr\'ia consistir de un \" r = \". M\'as adelante se detalla un problema espec\'ifico que se encontr\'o al momento de implementarlo con \textbf{PLY}\footnote{Python Lex Yacc}. 
+%\subsection{Comentarios sobre algunos tokens}
+%\begin{itemize}
+%\item[•] $\mathbf{RULE}$: Este token se decidi\'o definir con esa uni\'on de expresiones regulares porque, de no ser de esa manera, pod\'ia tener conflictos con otras definiciones de tokens, como por ej\'emplo las transformaciones o las rotaciones, pues una regla podr\'ia consistir de un \" r = \". M\'as adelante se detalla un problema espec\'ifico que se encontr\'o al momento de implementarlo con \textbf{PLY}\footnote{Python Lex Yacc}. 
 
-\item[•] $\mathbf{OR}\ =\ r'\backslash x7C'$ El s\'imbolo $'\backslash x7C'$ hace referencia al caracter  \textbar   en unicode.
-\item[•] $\mathbf{POW}\ =\ r'\backslash x5E'$ El s\'imbolo $'\backslash x5E'$ hace referencia al caracter $ \widehat{} $  en unicode.
-\item[•] $\mathbf{LBRACKET}\ =\ r'\backslash x5B'$ En este caso, la referencia al s\'imbolo [ est\'a dada por $'\backslash x5B'$. 
-\item[•] $\mathbf{RBRACKET}\ =\ r'\backslash x5D'$ Similar al caso anterior, el s\'imbolo ] es representado por $'\backslash x5D'$.
-\item[•] $\mathbf{LESS}\ =\ r'\backslash x3C'$ En este caso, el s\'imbolo $'\backslash x3C'$ en unicode esta referenciando al s\'imbolo $ < $. 
-\item[•] $\mathbf{GREATER}\ =\ r'\backslash x3E'$ Similar al caso anterior, el s\'imbolo $ > $, es referenciado por $'\backslash x3E'$.
-\item[•] $\mathbf{POINT}\ =\ r'\backslash x2E'$ En este caso, el s\'imbolo $'\backslash x2E'$ hace referencia al s\'imbolo .  .
+%\item[•] $\mathbf{OR}\ =\ r'\backslash x7C'$ El s\'imbolo $'\backslash x7C'$ hace referencia al caracter  \textbar   en unicode.
+%\item[•] $\mathbf{POW}\ =\ r'\backslash x5E'$ El s\'imbolo $'\backslash x5E'$ hace referencia al caracter $ \widehat{} $  en unicode.
+%\item[•] $\mathbf{LBRACKET}\ =\ r'\backslash x5B'$ En este caso, la referencia al s\'imbolo [ est\'a dada por $'\backslash x5B'$. 
+%\item[•] $\mathbf{RBRACKET}\ =\ r'\backslash x5D'$ Similar al caso anterior, el s\'imbolo ] es representado por $'\backslash x5D'$.
+%\item[•] $\mathbf{LESS}\ =\ r'\backslash x3C'$ En este caso, el s\'imbolo $'\backslash x3C'$ en unicode esta referenciando al s\'imbolo $ < $. 
+%\item[•] $\mathbf{GREATER}\ =\ r'\backslash x3E'$ Similar al caso anterior, el s\'imbolo $ > $, es referenciado por $'\backslash x3E'$.
+%\item[•] $\mathbf{POINT}\ =\ r'\backslash x2E'$ En este caso, el s\'imbolo $'\backslash x2E'$ hace referencia al s\'imbolo .  .
 
-\end{itemize}
+%\end{itemize}

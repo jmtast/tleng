@@ -17,5 +17,3 @@ scene.background = (1,1,1)
 
 if ("$" in rule2definition_Dict):
 	rule2definition_Dict['$'].show(Transformation())
-
-print rule2definition_Dict

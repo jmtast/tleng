@@ -13,10 +13,11 @@ Para la implemetaci\'on del analizador l\'exico y sint\'actico de la gram\'atica
 
 \subsection{Decisiones para la implementaci\'on}
 
-Para la correcta implemetaci\'on del analizador l\'exico se tuvo en cuenta la forma en que \href{http://www.dabeaz.com/ply/ply.html#ply_nn3}{PLex} eval\'ua el orden de los tokens, ya que toma la expresi\'on regular de mayor longitud, y luego las dem\'as. Esto tra\'ia problemas al analizar ciertas experesiones, tales como \textbf{ball}, ya que la misma estaba siendo considerada un token \textbf{Rule} porque primero estaba evaluando esa expresi\'on regular, y en particular el lenguaje aceptado por la dicha expresi\'on acepta la cadena $'ball'$. Por ello se decidi\'o forzar a el orden en que eval\'ue ciertas reglas.
+Para los tokens, la decisión tomada para este entrega es la explicada conjuntamente entre los items \textbf{Cambios para la reentrega} y \textbf{Descripción de la gramática}
 \\
 \\
 Luego, para poder implementar comentarios, y que se pueda ignorar el contenido, se utiliz\'o la notaci\'on de \textbf{t\_ignore} seguido de un nombre declarativo para lo que se desee ignorar, por ej\'emplo en este caso, \textbf{t\_ignore\_comment}.
+La definición de su expresión regular correspondiente permite tener comillas dentro del comentario, siempre y cuando estas comillas esten escapadas con un $\backslash$
 \\
 \\
 En el caso de analizador sint\'actico se decidi\'o utilizar un diccionario para guardar las transformaciones de un elemento.
@@ -53,7 +54,7 @@ A continuaci\'on se presenta el c\'odigo contenido en cada archivo.
 \lstinputlisting[language=Python,breaklines=true]{../lexer.py}
 
 %revisar nombres de funciones 
-En el c\'odigo previamente mostrado se puede ver la lista de tokens utilizados, luego la expresi\'on regular para cada uno. Se pueden observar, que adem\'as hay unas funciones auxiliares, tales como \textbf{isKeyword} que fueron implementadas para el cambio de la expresi\'on regular de \textbf{RULE}. Las mismas lo que hacen es verificar si un string est\'a contenido en la lista de keywords, que se corresponden a los antiormente presentados como tokens.
+En el c\'odigo previamente mostrado se puede ver la lista de tokens utilizados, luego la expresi\'on regular para cada uno. Se pueden observar, que adem\'as hay unas funciones auxiliares, tales como \textbf{isPrimitive} e \textbf{isTransformation}, que fueron implementadas para el cambio de la expresi\'on regular de \textbf{RULE\_NAME}. Las mismas lo que hacen es verificar si un string est\'a contenido en la lista de keywords (tanto si es un elementos primitivo o una transformacion), que se corresponden a los antiormente presentados como tokens.
 
 \newpage
 \subsubsection{yacc.py}
@@ -114,7 +115,7 @@ El siguiente ejemplo muestra otro caso, con otros operadores:
 
 \centerline{\includegraphics[scale=0.40]{arboles_derivacion/brackets_less_greater1.jpg}}
 
-En este ejemplo se tiene una convinaci\'on de varios operadores de la visualizaci\'on, por un lado, la potenciaci\'on que genera una repetici\'on del elemento al que se le aplica la misma. Por otro lado, los operadores $< >$ que describen un comportamiento opcional en cuanto a la visualizaci\'on, y, por \'ultimo, la agrupación, dada por los $[ ]$ que agrupar\'a, en este caso el efecto de la potenciaci\'on. \\
+En este ejemplo se tiene una combinaci\'on de varios operadores de la visualizaci\'on, por un lado, la potenciaci\'on que genera una repetici\'on del elemento al que se le aplica la misma. Por otro lado, los operadores $< >$ que describen un comportamiento opcional en cuanto a la visualizaci\'on, y, por \'ultimo, la agrupación, dada por los $[ ]$ que agrupar\'a, en este caso el efecto de la potenciaci\'on. \\
 En este ejemplo se puede observar que respecto a las clases previamente descriptas, se va a tener una jerarqu\'ia de las mismas generando el comportamiento esperado para este ejemplo.\\
 \\
 
@@ -144,9 +145,8 @@ Supongamos 2 instancias t1 y t2, y la operaci\'on es t1.transform(t2)
 \newpage
 \subsubsection{Modo de uso}
 El programa se utiliza por medio de una consola de comandos, de la siguiente manera:\\
-\textbf{ python [nombre] $<$ pathArchivo $>$} \\ 
-Donde [nombre] se cambia por: \textbf{grapher.py}
-y pathArchivo se cambia por el archivo a ejecutar.
+\textbf{ python grapher.py pathArchivo} \\ 
+Donde \'pathArchivo\' se cambia por el archivo a ejecutar.
 \\
 Por ejemplo:\\
 \\

@@ -38,7 +38,6 @@ def p_line_dot(p):
 def p_line(p):
 	"line : RULE_NAME EQUALS disy"
 	if (p[1] not in rule2definition_Dict):
-	#	nuevaEntry = getNextId()
 		setearNuevaEntry(p[1],OrDefinition())
 
 	rule2definition_Dict[p[1]].OR(p[3])
@@ -52,8 +51,6 @@ def p_elem_factor_transform(p):
 def p_elem_factor_primitive(p):
 	"elem_factor : PRIMITIVE"
 	p[0] = getPrimitiveAction(p[1])
-
-
 
 
 
@@ -90,14 +87,9 @@ def p_elem_factor_rule(p):
 	p[0] = RULE(p[1])
 
 
-
 def p_elem_factor_pot(p):
 	"elem_factor : elem_factor POW expr"
 	p[0] = p[1].POW(int(round(p[3])))
-
-
-
-
 
 
 

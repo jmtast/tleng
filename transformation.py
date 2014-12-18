@@ -6,8 +6,6 @@ class Transformation:
 		self.space=spatial_default()
 		self.color=color_default()
 		self.depth=depth_default()
-	#	self.traslation=traslation_default()
-
 	
 	def setSpace(self,otherspace):
 		self.space=otherspace
@@ -20,14 +18,6 @@ class Transformation:
 	def setDepth(self,otherdepth):
 		self.depth=otherdepth
 		return self
-
-#	def setTraslation(self,othertraslation):
-#		self.traslation=othertraslation
-#		return self
-
-
-#	def getTraslation(self):
-#		return self.traslation
 
 	def getDepth(self):
 		return self.depth
@@ -55,11 +45,9 @@ class Transformation:
 
 	def transform(self,other):
 		nuevaTransformacion = Transformation()
-	#	nuevaTransformacion.setSpace(NP.dot(other.getSpace(), self.getSpace())+other.getTraslation())
 		nuevaTransformacion.setSpace(NP.dot(other.getSpace(), self.getSpace()))
 		nuevaTransformacion.setColor(NP.multiply(other.getColor(), self.getColor()))
 		nuevaTransformacion.setDepth(min(self.getDepth(), other.getDepth()))
-	#	nuevaTransformacion.setTraslation(traslation_default())
 		return nuevaTransformacion
 
 	# debugging

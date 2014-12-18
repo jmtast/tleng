@@ -3,9 +3,9 @@ $G\ =\ <\ V_N\ ,\ V_T\ ,\ P\ ,\ INITIAL\ >$\\
 donde:\\
 \begin{itemize}
 
-\item []$\mathbf{V_N}\ =\ \{ INITIAL, LINE, DISY, PRIMITIVE, \\
-RULE, EXPR, TERM, FACTOR, \\
-CONJ, TRANSFORMATION, ELEM\_FACTOR \}$
+\item []$\mathbf{V_N}\ =\ \{ INITIAL, LINE, DISY, \\
+EXPR, TERM, FACTOR, \\
+CONJ, ELEM\_FACTOR \}$
 
 \item []$\mathbf{V_T}\ =\  \{ NUM, RULE\_NAME, EQUALS, DDOT, \\
 AND, ADD, SUB, MUL, DIV, OR, POW, LBRACKET,\\
@@ -27,40 +27,47 @@ AND, ADD, SUB, MUL, DIV, OR, POW, LBRACKET,\\
  %~ \item []$\mathbf{RULE\_NAME}\ =\ r'([a-zA-Z]+)\textbar \$ $\textbar \_ '$
  
  \item []$\mathbf{RULE\_NAME}\ =\ r'([a-zA-Z]+) $\textbar $ $ \$ $ $\textbar \_$ '$
- \item []$\mathbf{PRIMITIVE}\ =\ r'ball'$
- \item []$\mathbf{PRIMITIVE}\ =\ r'box'$
- \item []$\mathbf{PRIMITIVE}\ =\ r'\_'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'tx'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'ty'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'tz'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'rx'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'ry'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'rz'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'sx'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'sy'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'sz'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r's'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'cr'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'cg'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'cb'$
- \item []$\mathbf{TRANSFORMATION}\ =\ r'd'$
+ %\item []$\mathbf{PRIMITIVE}\ =\ r'ball'$
+ %\item []$\mathbf{PRIMITIVE}\ =\ r'box'$
+ %\item []$\mathbf{PRIMITIVE}\ =\ r'\_'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'tx'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'ty'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'tz'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'rx'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'ry'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'rz'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'sx'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'sy'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'sz'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r's'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'cr'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'cg'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'cb'$
+ %\item []$\mathbf{TRANSFORMATION}\ =\ r'd'$
  \item []$\mathbf{EQUALS}\ =\ r'='$
  \item []$\mathbf{DDOTE}\ =\ r':'$
  \item []$\mathbf{AND}\ =\ r'\&'$ 
- \item []$\mathbf{OR}\ =\ r'\backslash x7C'$  
- \item []$\mathbf{ADD}\ =\ r'\backslash +'$
+ \item []$\mathbf{OR}\ =\ r'\backslash|'$  
+ \item []$\mathbf{ADD}\ =\ r'\backslash+'$
  \item []$\mathbf{SUB}\ =\ r'-'$
- \item []$\mathbf{MUL}\ =\ r'\backslash *'$
+ \item []$\mathbf{MUL}\ =\ r'\backslash*'$
  \item []$\mathbf{DIV}\ =\ r'/'$
- \item []$\mathbf{POW}\ =\ r'\backslash x5E'$
- \item []$\mathbf{LBRACKET}\ =\ r'\backslash x5B'$
- \item []$\mathbf{RBRACKET}\ =\ r'\backslash x5D'$
- \item []$\mathbf{LPAREN}\ =\ r'\backslash x28'$
- \item []$\mathbf{RPAREN}\ =\ r'\backslash x29'$
- \item []$\mathbf{LESS}\ =\ r'\backslash x3C'$
- \item []$\mathbf{GREATER}\ =\ r'\backslash x3E'$
- \item []$\mathbf{POINT}\ =\ r'\backslash x2E'$
+ \item []$\mathbf{POW}\ =\ r'\backslash$\textasciicircum $'$
+ \item []$\mathbf{LBRACKET}\ =\ r'\backslash['$
+ \item []$\mathbf{RBRACKET}\ =\ r']'$
+ \item []$\mathbf{LPAREN}\ =\ r'\backslash('$
+ \item []$\mathbf{RPAREN}\ =\ r'\backslash)'$
+ \item []$\mathbf{LESS}\ =\ r'\backslash<'$
+ \item []$\mathbf{GREATER}\ =\ r'\backslash>'$
+ \item []$\mathbf{POINT}\ =\ r'\backslash.'$
 \end{itemize}
+
+Casos Particulares: Los tokens \textbf{PRIMITIVE} y \textbf{TRANSFORMATION}
+
+Ambos son capturados bajo la expresion regular del token \textbf{RULE\_NAME}.
+Si el string capturado se corresponde con un elemento primitivo (\textbf{BALL}, \textbf{BOX}, \textbf{\_}), entonces se modifica el atributo \'type\' del LexToken, para que sea un token \textbf{PRIMITIVE}.
+
+Ocurre lo mismo con el token \textbf{TRANSFORMATION}. Si el string capturado corresponde a alguna transformacion, entonces se cambia el atributo \'type\' para que pase a ser un token \textbf{TRANSFORMATION}
 
 
 \noindent
@@ -72,7 +79,7 @@ AND, ADD, SUB, MUL, DIV, OR, POW, LBRACKET,\\
 
 \begin{enumerate}
 \item $INITIAL$   $\rightarrow$  $LINE$ $INITIAL$ \\
-\item $INITIAL$   $\rightarrow$  $LAMBDA$ \\
+\item $INITIAL$   $\rightarrow$  $LINE$ \\
 \item $LINE$   $\rightarrow$  $RULE\_NAME$ $EQUALS$ $DISY$ \\
 \item $LINE$   $\rightarrow$  $RULE\_NAME$ $POINT$ $EQUALS$ $DISY$ \\
 
@@ -110,16 +117,6 @@ AND, ADD, SUB, MUL, DIV, OR, POW, LBRACKET,\\
 %~ \item $ELEM\_FACTOR$   	$\rightarrow$  $BALL$\\
 %~ \item $ELEM\_FACTOR$   	$\rightarrow$  $BOX$\\
 %~ \item $ELEM\_FACTOR$   	$\rightarrow$  $VOID$\\
-
-\item $PRIMITIVE$   	$\rightarrow$  $BALL$\\
-\item $PRIMITIVE$   	$\rightarrow$  $BOX$\\
-\item $PRIMITIVE$   	$\rightarrow$  $VOID$\\
-
-\item $TRANSFORMATION$  $\rightarrow$   :$rx$ $NUM$ \textbar :$ry$ $NUM$ \textbar :$rz$ $NUM$ \\
-\item $TRANSFORMATION$	$\rightarrow$	:$tx$ $NUM$ \textbar :$ty$ $NUM$ \textbar :$tz$ $NUM$ \\
-\item $TRANSFORMATION$	$\rightarrow$	:$sx$ $NUM$ \textbar :$sy$ $NUM$ \textbar :$sz$ $NUM$ \textbar :$s$ $NUM$ \\
-\item $TRANSFORMATION$ 	$\rightarrow$	:$cr$ $NUM$ \textbar :$cg$ $NUM$ \textbar :$cb$ $NUM$ \\
-\item $TRANSFORMATION$	$\rightarrow$	:$d$  $NUM$ \\
 
 \end{enumerate}
 

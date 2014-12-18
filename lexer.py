@@ -1,5 +1,4 @@
 import ply.lex as lex
-#from ply.lex import LexToken
 
 tokens=(
 	'NUM',
