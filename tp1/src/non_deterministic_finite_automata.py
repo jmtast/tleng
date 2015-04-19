@@ -20,7 +20,11 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
         self.states = states
         self.alphabet = alphabet
         self.transitions = transitions
+
+        if not (q0 in states):
+            raise ValueError('El estado inicial: %d no esta en la lista de estados' % q0)
         self.q0 = q0
+        
         self.final_states = final_states
 
     def print_automata(self, file = sys.stdout):
@@ -32,4 +36,18 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
             transition.print_transition(file)
 
     def add_transition(self, label, src, dst):
+        if not label in self.alphabet:
+            raise ValueError('El caracter %s no pertenece al alfabeto' % label)
+
+        if not src in self.states:
+            raise ValueError('El estado %d no pertenece al automata' % src)
+
+        if not dst in self.states:
+            raise ValueError('El estado %d no pertenece al automata' % dst)
+
         self.transitions.append(Transition(label, src, dst))
+
+    def add_state(state):
+        if state in self.states:
+            raise ValueError('El estado %d ya pertenece al automata' % state)
+        self.states.append(state)

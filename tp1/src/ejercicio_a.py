@@ -9,7 +9,7 @@ def afd_minimo(archivo_regex, archivo_automata):
 	# AFND to AFD
 	# minimize AFD
 	# AFD to file
-	afd = NonDeterministicFiniteAutomata([0,1,2], ['a','b'])
+	afd = NonDeterministicFiniteAutomata([0, 1, 2], ['a', 'b'])
 	afd.add_transition('a', 0, 1)
 	afd.add_transition('b', 1, 2)
 	afd.print_automata()
