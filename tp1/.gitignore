@@ -1,0 +1,5 @@
+# Archivos de compilación de Python
+*.pyc
+
+# Enunciado PDF
+*TL_20151C_TP1.pdf
