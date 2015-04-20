@@ -23,34 +23,18 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
 
     @classmethod
     def __from_lines(cls, lines):
-        if '{PLUS}' in lines[0]:
+        if '{PLUS}' in lines[0] or '{STAR}' in lines[0]:
             automata = cls.__from_lines(lines[1:])
 
-            new_q0 = automata.max_state() + 1
+            new_q0 = automata.new_state_name()
             automata.add_state(new_q0)
 
-            new_qf = automata.max_state() + 1
+            new_qf = automata.new_state_name()
             automata.add_state(new_qf)
 
             automata.add_transition(LAMBDA, new_q0, automata.q0)
-
-            for qf in automata.final_states:
-                automata.add_transition(LAMBDA, qf, automata.q0)
-                automata.add_transition(LAMBDA, qf, new_qf)
-
-            automata.final_states = [new_qf]
-            automata.q0 = new_q0
-        elif '{STAR}' in lines[0]:
-            automata = cls.__from_lines(lines[1:])
-
-            new_q0 = automata.max_state() + 1
-            automata.add_state(new_q0)
-
-            new_qf = automata.max_state() + 1
-            automata.add_state(new_qf)
-
-            automata.add_transition(LAMBDA, new_q0, automata.q0)
-            automata.add_transition(LAMBDA, new_q0, new_qf)
+            if '{STAR}' in lines[0]:
+                automata.add_transition(LAMBDA, new_q0, new_qf)
 
             for qf in automata.final_states:
                 automata.add_transition(LAMBDA, qf, automata.q0)
@@ -59,9 +43,50 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
             automata.final_states = [new_qf]
             automata.q0 = new_q0
         elif '{OPT}' in lines[0]:
-            automata = cls.__from_lines[1:]
+            automata = cls.__from_lines(lines[1:])
 
-            automata.final_states = automata.final_states + automata.q0
+            if not automata.q0 in automata.final_states:
+                automata.final_states += [automata.q0]
+        elif '{CONCAT}' in lines[0] or '{OR}' in lines[0]:
+            tab_level = lines[0].count('\t')
+            params = int(lines[0].strip().replace('{CONCAT}', '').replace('{OR}', ''))
+
+            first_line = lines.pop(0)
+            automatas = []
+            lines_for_automata = [lines.pop(0)]
+
+            while len(lines) > 0:
+                line = lines.pop(0)
+                if line.count('\t') > tab_level + 1:
+                    lines_for_automata.append(line)
+                else:
+                    automatas.append(cls.__from_lines(lines_for_automata))
+                    lines_for_automata = [line]
+
+            automatas.append(cls.__from_lines(lines_for_automata))
+
+            automata = automatas.pop(0)
+
+            if '{OR}' in first_line:
+                new_qf = automata.new_state_name()
+                automata.add_state(new_qf)
+                for qf in automata.final_states:
+                    automata.add_transition(LAMBDA, qf, new_qf)
+                automata.final_states = [new_qf]
+
+            for other_automata in automatas:
+                other_automata.__rename_states(automata.states)
+                automata.alphabet += [char for char in other_automata.alphabet if not char in automata.alphabet]
+                automata.__add_states(other_automata)
+                automata.__add_transitions(other_automata)
+                if '{OR}' in first_line:
+                    for qf in other_automata.final_states:
+                        automata.add_transition(LAMBDA, qf, new_qf)
+                    automata.add_transition(LAMBDA, automata.q0, other_automata.q0)
+                else:
+                    for qf in automata.final_states:
+                        automata.add_transition(LAMBDA, qf, other_automata.q0)
+                    automata.final_states = other_automata.final_states
         else:
             char = lines[0].strip()
             automata = NonDeterministicFiniteAutomata([0, 1], [char], [], 0, [1])
@@ -82,8 +107,8 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
 
         self.final_states = final_states
 
-    def max_state(self):
-        return max(self.states)
+    def new_state_name(self):
+        return max(self.states) + 1
 
     def print_automata(self, file = sys.stdout):
         print_line(self.states, file)
@@ -109,3 +134,27 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
         if state in self.states:
             raise ValueError('El estado %d ya pertenece al automata' % state)
         self.states.append(state)
+
+    def __add_states(self, other):
+        for state in other.states:
+            if not state in self.states:
+                self.add_state(state)
+
+    def __add_transitions(self, other):
+        for transition in other.transitions:
+            self.add_transition(transition.label, transition.src, transition.dst)
+
+    def __rename_states(self, states):
+        for state_to_change in states:
+            if state_to_change in self.states:
+                new_state = max(self.new_state_name(), max(states) + 1)
+
+                self.states = [(s if s != state_to_change else new_state) for s in self.states]
+
+                if self.q0 == state_to_change:
+                    self.q0 = new_state
+
+                self.final_states = [(s if s != state_to_change else new_state) for s in self.final_states]
+
+                self.transitions = [Transition(transition.label, (transition.src if transition.src != state_to_change else new_state), (transition.dst if transition.dst != state_to_change else new_state)) for transition in self.transitions]
+

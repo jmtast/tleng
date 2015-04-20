@@ -1,2 +1,10 @@
-{PLUS}
-	b
+{OR}3
+	a
+	{CONCAT}2
+		{STAR}
+			c
+		{PLUS}
+			{PLUS}
+				d
+	{OPT}
+		f
