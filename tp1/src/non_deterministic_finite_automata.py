@@ -28,12 +28,30 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
 
             new_q0 = automata.max_state() + 1
             automata.add_state(new_q0)
-            
+
             new_qf = automata.max_state() + 1
             automata.add_state(new_qf)
 
             automata.add_transition(LAMBDA, new_q0, automata.q0)
-            
+
+            for qf in automata.final_states:
+                automata.add_transition(LAMBDA, qf, automata.q0)
+                automata.add_transition(LAMBDA, qf, new_qf)
+
+            automata.final_states = [new_qf]
+            automata.q0 = new_q0
+        elif '{STAR}' in lines[0]:
+            automata = cls.__from_lines(lines[1:])
+
+            new_q0 = automata.max_state() + 1
+            automata.add_state(new_q0)
+
+            new_qf = automata.max_state() + 1
+            automata.add_state(new_qf)
+
+            automata.add_transition(LAMBDA, new_q0, automata.q0)
+            automata.add_transition(LAMBDA, new_q0, new_qf)
+
             for qf in automata.final_states:
                 automata.add_transition(LAMBDA, qf, automata.q0)
                 automata.add_transition(LAMBDA, qf, new_qf)
@@ -57,7 +75,7 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
         if not (q0 in states):
             raise ValueError('El estado inicial: %d no esta en la lista de estados' % q0)
         self.q0 = q0
-        
+
         self.final_states = final_states
 
     def max_state(self):
