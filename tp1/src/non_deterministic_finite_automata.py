@@ -58,6 +58,10 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
 
             automata.final_states = [new_qf]
             automata.q0 = new_q0
+        elif '{OPT}' in lines[0]:
+            automata = cls.__from_lines[1:]
+
+            automata.final_states = automata.final_states + automata.q0
         else:
             char = lines[0].strip()
             automata = NonDeterministicFiniteAutomata([0, 1], [char], [], 0, [1])
