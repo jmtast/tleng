@@ -1,4 +1,3 @@
-from finite_automata import *
 import sys
 
 LAMBDA = 'lambda'
@@ -16,7 +15,7 @@ class Transition:
     def print_transition(self, file = sys.stdout):
         print_line([self.src, self.label, self.dst], file)
 
-class NonDeterministicFiniteAutomata(FiniteAutomata):
+class NonDeterministicFiniteAutomata:
     @classmethod
     def from_file(cls, file):
         return cls.__from_lines(file.readlines())
