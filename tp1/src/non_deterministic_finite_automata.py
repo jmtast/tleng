@@ -122,43 +122,6 @@ class NonDeterministicFiniteAutomata(object):
         for transition in self.transitions:
             print_line([inverse_translation[transition.src], transition.label, inverse_translation[transition.dst]], file)
 
-    def print_dot(self, file = sys.stdout):
-        if self.translation:
-            inverse_translation = { v: k for k, v in self.translation.items() }
-        else:
-            inverse_translation = { s: s for s in self.states }
-
-        #file.write('\t'.join(map(lambda x: str(x), elements)) + '\n')
-        file.write('strict digraph {\n')
-
-        # Hidden node to make an arrow to q0
-        file.write('\trankdir=LR;\n')
-        file.write('\tnode [shape = none, label = "", width = 0, height = 0]; qd;\n')
-        file.write('\tnode [label="\N", width = 0.5, height = 0.5];\n')
-
-        # Final states
-        qfs = ';'.join([str(inverse_translation[qf]) for qf in self.final_states])
-        file.write('\tnode [shape = doublecircle]; ' + qfs + ';\n')
-        file.write('\tnode [shape = circle];\n')
-
-        # Hidden transition to q0
-        file.write('\tqd -> ' + inverse_translation[self.q0] + '\n')
-
-        # Multiple transitions from a src to the same dst should be in one line
-        for src in self.states:
-            for dst in self.states:
-                chars = set()
-                for char in self.alphabet:
-                    for transition in self.transitions:
-                        if transition.src == src and transition.dst == dst:
-                            chars.add(transition.label)
-                if chars != set():
-                    file.write('\t' + inverse_translation[src] + ' -> ' + inverse_translation[dst] + ' [label="' + ','.join(chars) + '"]\n')
-
-        file.write('}\n')
-
-
-
     def add_transition(self, label, src, dst):
         if label != LAMBDA and label not in self.alphabet:
             raise ValueError('El caracter %s no pertenece al alfabeto' % label)
@@ -224,6 +187,26 @@ class NonDeterministicFiniteAutomata(object):
                     deterministic.add_transition(char, new_state, transitions[char]['name'])
 
         return deterministic
+
+    def union(self, other_automata):
+        automata = NonDeterministicFiniteAutomata(self.states, self.alphabet, self.transitions, self.q0, self.final_states)
+
+        new_qf = automata.new_state_name()
+        automata.add_state(new_qf)
+        for qf in automata.final_states:
+            automata.add_transition(LAMBDA, qf, new_qf)
+        automata.final_states = [new_qf]
+
+        other_automata.__rename_states(automata.states)
+        automata.alphabet += [char for char in other_automata.alphabet if not char in automata.alphabet]
+        automata.__add_states(other_automata)
+        automata.__add_transitions(other_automata)
+
+        for qf in other_automata.final_states:
+            automata.add_transition(LAMBDA, qf, new_qf)
+        automata.add_transition(LAMBDA, automata.q0, other_automata.q0)
+
+        return automata
 
     def __reduce_set(self, sets):
         return reduce(lambda x, y: x.union(y), sets, set())
@@ -309,6 +292,44 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
         automata.final_states = [state for state in self.states if state not in self.final_states]
 
         return automata
+
+    def intersection(self, other_automata):
+        return self.complement().union(other_automata.complement()).determinize().complement()
+
+    def print_dot(self, file = sys.stdout):
+        if self.translation:
+            inverse_translation = { v: k for k, v in self.translation.items() }
+        else:
+            inverse_translation = { s: s for s in self.states }
+
+        #file.write('\t'.join(map(lambda x: str(x), elements)) + '\n')
+        file.write('strict digraph {\n')
+
+        # Hidden node to make an arrow to q0
+        file.write('\trankdir=LR;\n')
+        file.write('\tnode [shape = none, label = "", width = 0, height = 0]; qd;\n')
+        file.write('\tnode [label="\N", width = 0.5, height = 0.5];\n')
+
+        # Final states
+        qfs = ';'.join([str(inverse_translation[qf]) for qf in self.final_states])
+        file.write('\tnode [shape = doublecircle]; ' + qfs + ';\n')
+        file.write('\tnode [shape = circle];\n')
+
+        # Hidden transition to q0
+        file.write('\tqd -> ' + inverse_translation[self.q0] + '\n')
+
+        # Multiple transitions from a src to the same dst should be in one line
+        for src in self.states:
+            for dst in self.states:
+                chars = set()
+                for char in self.alphabet:
+                    for transition in self.transitions:
+                        if transition.src == src and transition.dst == dst:
+                            chars.add(transition.label)
+                if chars != set():
+                    file.write('\t' + inverse_translation[src] + ' -> ' + inverse_translation[dst] + ' [label="' + ','.join(chars) + '"]\n')
+
+        file.write('}\n')
 
     def __complete_transitions(self):
         trap = self.new_state_name()

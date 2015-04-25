@@ -1,1 +1,5 @@
-(-ABC)?(0|1)+\t*
+{CONCAT}3
+	a
+	a
+	{OPT}
+		a
