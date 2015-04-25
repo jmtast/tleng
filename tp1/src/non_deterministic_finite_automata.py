@@ -331,6 +331,14 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
 
         file.write('}\n')
 
+    def equivalent(self, other_automata):
+        inter_comp = self.intersection(other_automata.complement())
+
+        if len(inter_comp.final_states) == 0:
+            print 'TRUE'
+        else:
+            print 'FALSE'
+
     def __complete_transitions(self):
         trap = self.new_state_name()
 
