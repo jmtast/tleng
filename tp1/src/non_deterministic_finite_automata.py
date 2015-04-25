@@ -13,12 +13,9 @@ class Transition:
         self.src = src
         self.dst = dst
 
-    def print_transition(self, file = sys.stdout):
-        print_line([self.src, self.label, self.dst], file)
-
 class NonDeterministicFiniteAutomata(object):
     @classmethod
-    def from_file(cls, file):
+    def from_regex_file(cls, file):
         return cls.__from_lines(file.readlines())
 
     @classmethod
@@ -96,10 +93,11 @@ class NonDeterministicFiniteAutomata(object):
 
 
 
-    def __init__(self, states = [], alphabet = [], transitions = [], q0 = 0, final_states = [0]):
+    def __init__(self, states = [0], alphabet = [], transitions = [], q0 = 0, final_states = []):
         self.states = states
         self.alphabet = alphabet
         self.transitions = transitions
+        self.translation = None
 
         if q0 not in states:
             raise ValueError('El estado inicial: %d no esta en la lista de estados' % q0)
@@ -114,12 +112,22 @@ class NonDeterministicFiniteAutomata(object):
         return max(self.states) + 1
 
     def print_automata(self, file = sys.stdout):
-        print_line(self.states, file)
-        print_line(self.alphabet, file)
-        file.write(str(self.q0) + '\n')
-        print_line(self.final_states, file)
-        for transition in self.transitions:
-            transition.print_transition(file)
+        if self.translation:
+            inverse_translation = { v: k for k, v in self.translation.items() }
+
+            print_line([inverse_translation[state] for state in self.states], file)
+            print_line(self.alphabet, file)
+            file.write(str(inverse_translation[self.q0]) + '\n')
+            print_line([inverse_translation[state] for state in self.final_states], file)
+            for transition in self.transitions:
+                print_line([inverse_translation[transition.src], transition.label, inverse_translation[transition.dst]], file)
+        else:
+            print_line(self.states, file)
+            print_line(self.alphabet, file)
+            file.write(str(self.q0) + '\n')
+            print_line(self.final_states, file)
+            for transition in self.transitions:
+                print_line([transition.src, transition.label, transition.dst], file)
 
     def add_transition(self, label, src, dst):
         if label != LAMBDA and label not in self.alphabet:
@@ -230,6 +238,29 @@ class NonDeterministicFiniteAutomata(object):
                 self.transitions = [Transition(transition.label, (transition.src if transition.src != state_to_change else new_state), (transition.dst if transition.dst != state_to_change else new_state)) for transition in self.transitions]
 
 class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
+    @classmethod
+    def from_automata_file(cls, file):
+        lines = file.readlines()
+
+        states = lines.pop(0).strip().split('\t')
+        translation = { states[i]: i for i in range(0, len(states)) }
+
+        alphabet = lines.pop(0).strip().split('\t')
+
+        q0 = translation[lines.pop(0).strip()]
+
+        final_states = [translation[qf] for qf in lines.pop(0).strip().split('\t')]
+
+        automata = DeterministicFiniteAutomata(range(0, len(states)), alphabet, [], q0, final_states)
+        automata.translation = translation
+
+        for line in lines:
+            transition = line.strip().split('\t')
+            automata.add_transition(transition[1], translation[transition[0]], translation[transition[2]])
+
+        return automata
+
+
     def add_transition(self, label, src, dst):
         if label == LAMBDA:
             raise ValueError('No se pueden crear transiciones lambda')
