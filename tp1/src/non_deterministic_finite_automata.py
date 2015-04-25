@@ -4,7 +4,7 @@ import sys
 LAMBDA = 'lambda'
 
 def print_line(elements, file = sys.stdout):
-    file.write('\t'.join(map(lambda x: str(x), elements)) + '\n')
+    file.write('\t'.join(map(str, elements)) + '\n')
 
 class Transition:
 
@@ -91,8 +91,6 @@ class NonDeterministicFiniteAutomata(object):
 
         return automata
 
-
-
     def __init__(self, states = [0], alphabet = [], transitions = [], q0 = 0, final_states = []):
         self.states = states
         self.alphabet = alphabet
@@ -114,20 +112,44 @@ class NonDeterministicFiniteAutomata(object):
     def print_automata(self, file = sys.stdout):
         if self.translation:
             inverse_translation = { v: k for k, v in self.translation.items() }
-
-            print_line([inverse_translation[state] for state in self.states], file)
-            print_line(self.alphabet, file)
-            file.write(str(inverse_translation[self.q0]) + '\n')
-            print_line([inverse_translation[state] for state in self.final_states], file)
-            for transition in self.transitions:
-                print_line([inverse_translation[transition.src], transition.label, inverse_translation[transition.dst]], file)
         else:
-            print_line(self.states, file)
-            print_line(self.alphabet, file)
-            file.write(str(self.q0) + '\n')
-            print_line(self.final_states, file)
-            for transition in self.transitions:
-                print_line([transition.src, transition.label, transition.dst], file)
+            inverse_translation = { s: s for s in self.states }
+
+        print_line([inverse_translation[state] for state in self.states], file)
+        print_line(self.alphabet, file)
+        file.write(str(inverse_translation[self.q0]) + '\n')
+        print_line([inverse_translation[state] for state in self.final_states], file)
+        for transition in self.transitions:
+            print_line([inverse_translation[transition.src], transition.label, inverse_translation[transition.dst]], file)
+
+    def print_dot(self, file = sys.stdout):
+        if self.translation:
+            inverse_translation = { v: k for k, v in self.translation.items() }
+        else:
+            inverse_translation = { s: s for s in self.states }
+
+        #file.write('\t'.join(map(lambda x: str(x), elements)) + '\n')
+        file.write('strict digraph {\n')
+
+        # Hidden node to make an arrow to q0
+        file.write('\trankdir=LR;\n')
+        file.write('\tnode [shape = none, label = "", width = 0, height = 0]; qd;\n')
+        file.write('\tnode [label="\N", width = 0.5, height = 0.5];\n')
+
+        # Final states
+        qfs = ';'.join([str(inverse_translation[qf]) for qf in self.final_states])
+        file.write('\tnode [shape = doublecircle]; ' + qfs + ';\n')
+        file.write('\tnode [shape = circle];\n')
+
+        # Hidden transition to q0
+        file.write('\tqd -> ' + inverse_translation[self.q0] + '\n')
+
+        for transition in self.transitions:
+            file.write('\t' + inverse_translation[transition.src] + ' -> ' + inverse_translation[transition.dst] + ' [label="' + transition.label + '"]\n')
+
+        file.write('}\n')
+
+
 
     def add_transition(self, label, src, dst):
         if label != LAMBDA and label not in self.alphabet:
