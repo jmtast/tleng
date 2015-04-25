@@ -1,3 +1,5 @@
+from non_deterministic_finite_automata import *
+
 class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
     def add_transition(self, label, src, dst):
         if label == LAMBDA:

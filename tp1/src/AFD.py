@@ -5,7 +5,7 @@ import sys
 import os
 
 from non_deterministic_finite_automata import *
-from regexp import *
+#from regexp import *
 from ejercicio_a import afd_minimo
 from ejercicio_b import pertenece_al_lenguaje
 from ejercicio_c import grafo
