@@ -352,5 +352,6 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
                 if not exists_transition:
                     if trap not in self.states:
                         self.add_state(trap)
-                        self.translation['qt'] = trap
+                        if self.translation:
+                            self.translation['qt'] = trap
                     self.add_transition(char, state, trap)
