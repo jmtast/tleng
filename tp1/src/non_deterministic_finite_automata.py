@@ -16,7 +16,7 @@ class Transition:
     def print_transition(self, file = sys.stdout):
         print_line([self.src, self.label, self.dst], file)
 
-class NonDeterministicFiniteAutomata(FiniteAutomata):
+class NonDeterministicFiniteAutomata(object):
     @classmethod
     def from_file(cls, file):
         return cls.__from_lines(file.readlines())
@@ -101,10 +101,13 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
         self.alphabet = alphabet
         self.transitions = transitions
 
-        if not (q0 in states):
+        if q0 not in states:
             raise ValueError('El estado inicial: %d no esta en la lista de estados' % q0)
         self.q0 = q0
 
+        for qf in final_states:
+            if qf not in states:
+                raise ValueError('El estado final: %d no esta en la lista de estados' % qf)
         self.final_states = final_states
 
     def new_state_name(self):
@@ -119,13 +122,13 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
             transition.print_transition(file)
 
     def add_transition(self, label, src, dst):
-        if label != LAMBDA and not label in self.alphabet:
+        if label != LAMBDA and label not in self.alphabet:
             raise ValueError('El caracter %s no pertenece al alfabeto' % label)
 
-        if not src in self.states:
+        if src not in self.states:
             raise ValueError('El estado %d no pertenece al automata' % src)
 
-        if not dst in self.states:
+        if dst not in self.states:
             raise ValueError('El estado %d no pertenece al automata' % dst)
 
         self.transitions.append(Transition(label, src, dst))
@@ -134,6 +137,74 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
         if state in self.states:
             raise ValueError('El estado %d ya pertenece al automata' % state)
         self.states.append(state)
+
+    def determinize(self):
+        deterministic = DeterministicFiniteAutomata([0], self.alphabet, [], 0, [])
+
+        new_q0 = { 'name': 0, 'old_states': self.__lambda_closure(self.q0) }
+
+        # From new state name to hash with name and old states
+        translations = { 0: new_q0 }
+
+        # Table for determinization algorithm
+        afd_table = {}
+
+        pending_states = [new_q0]
+        while len(pending_states) > 0:
+            new_state = pending_states.pop()
+            afd_table[new_state['name']] = {}
+
+            for char in self.alphabet:
+                reachable_states = self.__reduce_set(map(lambda state: self.__reachable_states(state, char), new_state['old_states']))
+                lambda_reachable_states = self.__reduce_set(map(self.__lambda_closure, reachable_states))
+
+                # Find if the set of old states already exists
+                state_name = deterministic.new_state_name()
+                for key in translations:
+                    if translations[key]['old_states'] == lambda_reachable_states:
+                        state_name = translations[key]['name']
+
+                # If there isn't an existing set of old states already named
+                if state_name == deterministic.new_state_name():
+                    translations[state_name] = { 'name': state_name, 'old_states': lambda_reachable_states }
+                    if lambda_reachable_states != set():
+                        deterministic.add_state(state_name)
+                        pending_states.append(translations[state_name])
+
+                afd_table[new_state['name']][char] = translations[state_name]
+
+        # All states that had a final old state are now final
+        for new_state, equivalence in translations.items():
+            for old_state in equivalence['old_states']:
+                if old_state in self.final_states:
+                    deterministic.final_states.append(new_state)
+
+        # Set new transitions from table
+        for new_state, transitions in afd_table.items():
+            for char in self.alphabet:
+                if transitions[char]['old_states'] != set():
+                    deterministic.add_transition(char, new_state, transitions[char]['name'])
+
+        return deterministic
+
+    def __reduce_set(self, sets):
+        return reduce(lambda x, y: x.union(y), sets, set())
+
+    def __reachable_states(self, state, char):
+        return set([transition.dst for transition in self.transitions if transition.src == state and transition.label == char])
+
+    def __lambda_closure(self, state):
+        closure = set()
+        pending_states = set({state})
+
+        while len(pending_states) > 0:
+            closure.add(pending_states.pop())
+
+            for transition in self.transitions:
+                if transition.src in closure and transition.label == LAMBDA and transition.dst not in closure:
+                    pending_states.add(transition.dst)
+
+        return closure
 
     def __add_states(self, other):
         for state in other.states:
@@ -158,3 +229,13 @@ class NonDeterministicFiniteAutomata(FiniteAutomata):
 
                 self.transitions = [Transition(transition.label, (transition.src if transition.src != state_to_change else new_state), (transition.dst if transition.dst != state_to_change else new_state)) for transition in self.transitions]
 
+class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
+    def add_transition(self, label, src, dst):
+        if label == LAMBDA:
+            raise ValueError('No se pueden crear transiciones lambda')
+
+        for transition in self.transitions:
+            if transition.src == src and transition.label == label:
+                raise ValueError('Ya existe una transicion del estado %d con el caracter %s' % (src, label))
+
+        super(DeterministicFiniteAutomata, self).add_transition(label, src, dst)
