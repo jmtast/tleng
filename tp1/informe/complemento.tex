@@ -1,0 +1,24 @@
+Dado un autómata finito determinístico A, para obtener el complemento del lenguaje que identifica, se utilizará el siguiente algoritmo:
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \Function{complemento}{$A$}
+    \State $estadoTrampa \gets \textbf{agregarNuevoEstado}(A)$
+
+    \For{$estado$ \textbf{en} \textbf{estados}(A)}
+
+      \For{$caracter$ \textbf{en} \textbf{alfabeto}(A)}
+
+        \If{$\nexists destino \in \textbf{estados}(A) | (estado \rightarrow_{caracter} destino) \in \textbf{transiciones}(A)$}
+
+          \State $\textbf{transiciones}(A) \gets \textbf{transiciones}(A) \cup \{estado \rightarrow_{caracter} estadoTrampa\}$
+        \EndIf
+      \EndFor
+    \EndFor
+
+    \State $\textbf{estadosFinales}(A) \gets \textbf{estados}(A) \setminus \textbf{estadosFinales}(A)$
+
+    \State \Return $A$
+  \EndFunction
+\end{algorithmic}
+\end{algorithm}
