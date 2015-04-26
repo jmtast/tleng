@@ -1,0 +1,39 @@
+Dados dos lenguajes A y B, por las leyes de De Morgan sabemos que vale:
+
+$A \cap B = \overline{\overline{A} \cup \overline{B}}$
+
+Por lo tanto para obtener la intersección de A con B, se hará la unión del complemento de cada uno.
+
+Ya que la unión devuelve un autómata no determinístico, a ese resultado se lo determinizará para luego obtener su complemento.
+
+\subsection{Unión}
+
+Para obtener la unión de 2 autómatas finitos (pueden ser no determinísticos), se utiliza el siguiente algoritmo:
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \Function{union}{$A, B$}
+
+    \State $B \gets \textbf{renombrarEstadosParaEvitarColisiones}(B, estados(A)) $
+
+    \State $\textbf{alfabeto}(A) \gets \textbf{alfabeto}(A) \cup \textbf{alfabeto}(B)$
+
+    \State $\textbf{estados}(A) \gets \textbf{estados}(A) \cup \textbf{estados}(B)$
+
+    \State $\textbf{transiciones}(A) \gets \textbf{transiciones}(A) \cup \textbf{transiciones}(B)$
+
+    \State $\textbf{transiciones}(A) \gets \textbf{transiciones}(A) \cup \{\textbf{q0}(A) \rightarrow_{\lambda} \textbf{q0}(B)\}$
+
+    \State $nuevoQf \gets \textbf{agregarNuevoEstado}(A)$
+
+    \For{$qf$ \textbf{en} \textbf{estadosFinales}(A) $\cup$ \textbf{estadosFinales}(B)}
+
+      \State $\textbf{transiciones}(A) \gets \textbf{transiciones}(A) \cup \{qf \rightarrow_{\lambda} nuevoQf\}$
+    \EndFor
+
+    \State $\textbf{estadosFinales}(A) \gets \{nuevoQf\}$
+
+    \State \Return $A$
+  \EndFunction
+\end{algorithmic}
+\end{algorithm}
