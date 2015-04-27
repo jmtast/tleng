@@ -1,0 +1,4 @@
+\section{Ejercicio B - Pertenencia de una cadena al lenguaje}
+\indent \indent Dado un AFD y una cadena, se implementó un mecanismo que determinara si dicha cadena pertenece al lenguaje representado por el autómata.\\
+\indent El algoritmo es relativamente simple: define que una cadena pertenece al lenguaje si, partiendo desde el estado inicial del autómata, se puede arribar a un estado final siguiendo las transiciones de estados determinadas por la lectura de los símbolos de la cadena de izquierda a derecha.\\
+\indent Dicho de otra manera, una cadena no pertenece al lenguaje representado por el autómata si y sólo si la cadena posee un símbolo que no pertenece al alfabeto del lenguaje, o si supone tomar una transición no definida en el autómata (esto es,que no haya una para transición etiquetada con el caracter a consumir de la cadena desde el estado actual) o si luego de consumirla en su totalidad no se arriba a un estado final.\\

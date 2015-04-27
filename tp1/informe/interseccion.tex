@@ -1,14 +1,15 @@
-Dados dos lenguajes A y B, por las leyes de De Morgan sabemos que vale:
+\section{Ejercicio D - Intersección}
 
+\indent \indent Para obtener el AFD que represente a la intersección de los lenguajes de dos AFD dados A y B, se utilizó que, siguiendo las leyes de De Morgan:\\
+\begin{center}
 $A \cap B = \overline{\overline{A} \cup \overline{B}}$
+\end{center}
 
-Por lo tanto para obtener la intersección de A con B, se hará la unión del complemento de cada uno.
-
-Ya que la unión devuelve un autómata no determinístico, a ese resultado se lo determinizará para luego obtener su complemento.
+\indent Luego, para calcular la intersección, haremos uso de la unión de los complementos de los autómatas. Es menester indicar que, dado que la unión devuelve una AFND, al autómata obtenido se le aplicará el algoritmo de determinación explicado anteriormente para luego calcular su complemento.\\
 
 \subsection{Unión}
 
-Para obtener la unión de 2 autómatas finitos (pueden ser no determinísticos), se utiliza el siguiente algoritmo:
+\indent \indent Para obtener la unión de dos autómatas finitos, que podrían ser no determinísticos), se utiliza el siguiente algoritmo:\\
 
 \begin{algorithm}
 \begin{algorithmic}[1]
