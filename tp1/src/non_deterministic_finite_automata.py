@@ -262,17 +262,28 @@ class NonDeterministicFiniteAutomata(object):
             else:
                 nonfinal_states.append({ state: states_hash[state] })
 
+        # 0-equivalence:
         previous_equivalence = { 'I': nonfinal_states, 'II': final_states }
-        
-        return previous_equivalence
-        
+
+        # current_equivalence = next_equivalence(previous_equivalence)
+        # while previous_equivalence != current_equivalence:
+            # use sets!!!!!! (numpy?)
+
+        # import pdb; pdb.set_trace()
+        print(previous_equivalence)
+        # return previous_equivalence
+        # return self.states_hash()
+
+    # def next_equivalence(previous_equivalence):
+
+
     def states_hash(self):
         states_hash = {}
         for transition in self.transitions:
             if transition.src not in states_hash.keys():
-                states_hash[transition.src] = [{ transition.label: transition.dst }]
+                states_hash[transition.src] = { transition.label: transition.dst }
             else:
-                states_hash[transition.src].append({ transition.label: transition.dst })
+                states_hash[transition.src].update({ transition.label: transition.dst })
 
         return states_hash
 
