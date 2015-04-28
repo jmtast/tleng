@@ -252,13 +252,20 @@ class NonDeterministicFiniteAutomata(object):
 
     def minimize(self):
         # prepare 0-equivalence -> separate in two sets: final(F) and nonfinal(NF) states
-        nonfinal_states = np.setdiff1d(self.states, self.final_states)
-        final_states = np.array(self.final_states)
+        states_hash = self.states_hash()
+        nonfinal_states = []
+        final_states = []
 
-        previous_equivalence = { '1': nonfinal_states, '2': final_states }
+        for state in states_hash.keys():
+            if state in self.final_states:
+                final_states.append({ state: states_hash[state] })
+            else:
+                nonfinal_states.append({ state: states_hash[state] })
+
+        previous_equivalence = { 'I': nonfinal_states, 'II': final_states }
         
-        return self.states_hash()
-
+        return previous_equivalence
+        
     def states_hash(self):
         states_hash = {}
         for transition in self.transitions:
@@ -268,6 +275,15 @@ class NonDeterministicFiniteAutomata(object):
                 states_hash[transition.src].append({ transition.label: transition.dst })
 
         return states_hash
+
+    # minimization pseudocode:
+    # eliminate unreachable states (from q0)
+    # prepare 0-equivalence -> separate in two sets: final(F) and non-final(NF) states
+    # while previous equivalence != current equivalence:
+    #   while there are unlooked pairs
+    #     take two states from a previous equivalence partition and compare where they go through each transition
+    #     if they differ, place them in separate sets
+    #     else, place them in the same set
 
 class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
     @classmethod
