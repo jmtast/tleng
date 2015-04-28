@@ -1,8 +1,32 @@
 \section{Ejercicio A - De una expresión regular a un AFD}
 
 \subsection{Generar Autómata}
+Para generar el autómata a través de la expresión regular, se va leyendo línea por línea y se separa en casos según lo que se lea:
+
+\begin{itemize}
+
+\item Un caracter: Es el caso base de la recursión. Se genera un autómata [qo] $\rightarrow_{caracter}$ [[q1]]
+
+\item PLUS: Se genera un autómata con las líneas siguientes correspondientes (identificadas por la indentación). Luego, por cada estado final se agrega una transición $\lambda$ al estado inicial.
+
+\item STAR: Lo mismo que para PLUS, pero además se agrega otra transición $\lambda$ del estado inicial al final.
+
+\item OPT: Al autómata generado por las siguientes líneas se le agrega el estado inicial a la lista de estados finales.
+
+\item CONCAT: Se generan todos los autómatas correspondientes (renombrando los estados para que no haya colisiones en ninguno), luego se conectan cada uno con transiciones $\lambda$ desde todos sus estados finales hacia el estado inicial del siguiente.
+
+\item OR: Se generan todos los autómatas correspondientes (renombrando los estados para que no haya colisiones en ninguno), luego del estado inicial del primero se conectan con transiciones $\lambda$ a todos los otros estados iniciales. Se genera un nuevo estado, que se marca como el único final y de todos los otros estados ex-finales se hace una transición $\lambda$ hacia este estado.
+
+\end{itemize}
 
 \subsection{Determinizar}
 
-\subsection{Minimizar}
+Para determinizar un AFND-$\lambda$ con Q conjunto de estados y $\sum$ alfabeto, se genera una tabla de Partes(Q) X $\sum$.\\
+Se comienza agregando la clausura-$\lambda$ del estado inicial a la tabla y, por cada letra del alfabeto, la clausura-$\lambda$ de los estados a los cuáles se puede llegar, empezando de algún estado en el conjunto de la clausura-$\lambda$ del estado inicial y avanzando por una transición con la letra correpsondiente.\\
+Para cada conjunto generado de esta manera, que no se haya calculado previamente, se agrega a la tabla se la misma forma.\\
+Cuando ya no quedan conjuntos por procesar, la tabla resultante se transforma a un AFD de la siguiente manera:\\
+Los conjuntos generados pasan a ser los estados, el primero será el estado inicial, todos aquellos conjuntos que contengan algún estado final del AFND-$\lambda$ serán los estados finales. Y la tabla indica las transiciones, para cada estado por cada letra a qué otro estado debe ir.
 
+
+\subsection{Minimizar}
+Juanma: Te toca ;)
