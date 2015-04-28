@@ -265,7 +265,7 @@ class NonDeterministicFiniteAutomata(object):
         # 0-equivalence:
         previous_equivalence = { 'I': nonfinal_states, 'II': final_states }
 
-        # current_equivalence = next_equivalence(previous_equivalence)
+        current_equivalence = self.next_equivalence(previous_equivalence)
         # while previous_equivalence != current_equivalence:
             # use sets!!!!!! (numpy?)
 
@@ -274,8 +274,12 @@ class NonDeterministicFiniteAutomata(object):
         # return previous_equivalence
         # return self.states_hash()
 
-    # def next_equivalence(previous_equivalence):
-
+    def next_equivalence(self, previous_equivalence):
+        states_hash = self.states_hash()
+        import pdb; pdb.set_trace()
+        for equivalence in previous_equivalence.keys():
+            equivalence_dup = equivalence.copy()
+        print("ohai")
 
     def states_hash(self):
         states_hash = {}
