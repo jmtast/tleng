@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 
 LAMBDA = 'lambda'
 
@@ -248,6 +249,25 @@ class NonDeterministicFiniteAutomata(object):
                 self.final_states = [(s if s != state_to_change else new_state) for s in self.final_states]
 
                 self.transitions = [Transition(transition.label, (transition.src if transition.src != state_to_change else new_state), (transition.dst if transition.dst != state_to_change else new_state)) for transition in self.transitions]
+
+    def minimize(self):
+        # prepare 0-equivalence -> separate in two sets: final(F) and nonfinal(NF) states
+        nonfinal_states = np.setdiff1d(self.states, self.final_states)
+        final_states = np.array(self.final_states)
+
+        previous_equivalence = { '1': nonfinal_states, '2': final_states }
+        
+        return self.states_hash()
+
+    def states_hash(self):
+        states_hash = {}
+        for transition in self.transitions:
+            if transition.src not in states_hash.keys():
+                states_hash[transition.src] = [{ transition.label: transition.dst }]
+            else:
+                states_hash[transition.src].append({ transition.label: transition.dst })
+
+        return states_hash
 
 class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
     @classmethod
