@@ -253,14 +253,14 @@ class NonDeterministicFiniteAutomata(object):
     def minimize(self):
         # prepare 0-equivalence -> separate in two sets: final(F) and nonfinal(NF) states
         states_hash = self.states_hash()
-        nonfinal_states = []
-        final_states = []
+        nonfinal_states = {}
+        final_states = {}
 
         for state in states_hash.keys():
             if state in self.final_states:
-                final_states.append({ state: states_hash[state] })
+                final_states.update({ state: states_hash[state] })
             else:
-                nonfinal_states.append({ state: states_hash[state] })
+                nonfinal_states.update({ state: states_hash[state] })
 
         # 0-equivalence:
         previous_equivalence = { 'I': nonfinal_states, 'II': final_states }
