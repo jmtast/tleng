@@ -23,10 +23,24 @@ Para generar el autómata a través de la expresión regular, se va leyendo lín
 
 Para determinizar un AFND-$\lambda$ con Q conjunto de estados y $\sum$ alfabeto, se genera una tabla de Partes(Q) X $\sum$.\\
 Se comienza agregando la clausura-$\lambda$ del estado inicial a la tabla y, por cada letra del alfabeto, la clausura-$\lambda$ de los estados a los cuáles se puede llegar, empezando de algún estado en el conjunto de la clausura-$\lambda$ del estado inicial y avanzando por una transición con la letra correpsondiente.\\
-Para cada conjunto generado de esta manera, que no se haya calculado previamente, se agrega a la tabla se la misma forma.\\
+Para cada conjunto generado de esta manera, que no se haya calculado previamente, se agrega a la tabla de la misma forma.\\
 Cuando ya no quedan conjuntos por procesar, la tabla resultante se transforma a un AFD de la siguiente manera:\\
 Los conjuntos generados pasan a ser los estados, el primero será el estado inicial, todos aquellos conjuntos que contengan algún estado final del AFND-$\lambda$ serán los estados finales. Y la tabla indica las transiciones, para cada estado por cada letra a qué otro estado debe ir.
 
 
 \subsection{Minimizar}
-Juanma: Te toca ;)
+
+Para minimizar un AFD (en caso de ser AFND-$\lambda$, se utiliza la función para determinizarlo descripta en el punto anterior), se hace lo siguiente:
+\begin{enumerate}
+	\item Se remueven los estados no alcanzables del autómata A.
+	\item Se genera la \textit{0-equivalencia}, que consiste en separar en 2 clases de equivalencia, una con los estados finales y otra con los no finales.
+	\item Se calcula la \textit{k-equivalencia} a partir de la \textit{k-1-equivalencia}.
+	\item Si la \textit{k-equivalencia} es igual a la \textit{k-1-equivalencia}, se deja de ciclar y se genera a partir de esa clase de equivalencia, el autómata final.
+	\item Generación del autómata final:
+	\begin{enumerate}
+		\item Se crea un estado por cada clase de equivalencia resultante.
+		\item Se asigna como estado inicial al estado que representa la clase de equivalencia que contiene al estado inicial original.
+		\item Se asignan como finales, todos los estados que representan a las clases de equivalencia que contengan algún estado final original.
+		\item En cada clase, se mira el primer estado y se ve a que estados iban en el autómata original. Se agrega una transición al estado que representa la clase en la que dicho estado original correspondía.
+	\end{enumerate}
+\end{enumerate}
