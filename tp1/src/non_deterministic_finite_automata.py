@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import copy
 
 LAMBDA = 'lambda'
 
@@ -253,34 +254,46 @@ class NonDeterministicFiniteAutomata(object):
     def minimize(self):
         # prepare 0-equivalence -> separate in two sets: final(F) and nonfinal(NF) states
         states_hash = self.states_hash()
-        nonfinal_states = {}
-        final_states = {}
 
         for state in states_hash.keys():
-            if state in self.final_states:
-                final_states.update({ state: states_hash[state] })
+            if state not in self.final_states:
+                states_hash[state]['eq'] = 1
             else:
-                nonfinal_states.update({ state: states_hash[state] })
-
-        # 0-equivalence:
-        previous_equivalence = { 'I': nonfinal_states, 'II': final_states }
-
-        current_equivalence = self.next_equivalence(previous_equivalence)
+                states_hash[state]['eq'] = 2
+                
+        current_equivalence = self.next_equivalence(states_hash)
         # while previous_equivalence != current_equivalence:
-            # use sets!!!!!! (numpy?)
+            # previous_equivalence = current_equivalence
+            # current_equivalence = self.next_equivalence(previous_equivalence)
 
         # import pdb; pdb.set_trace()
-        print(previous_equivalence)
+        print(current_equivalence)
         # return previous_equivalence
         # return self.states_hash()
 
-    def next_equivalence(self, previous_equivalence):
-        states_hash = self.states_hash()
-        import pdb; pdb.set_trace()
-        for equivalence in previous_equivalence.keys():
-            equivalence_dup = equivalence.copy()
-        print("ohai")
+    def next_equivalence(automata, previous_equivalence):
+        current_equivalence = copy.deepcopy(previous_equivalence)
+        automata.remove_old_eq(current_equivalence)
+        
+        next_eq = 1
+        for state in previous_equivalence.keys():
+            previous_eq = previous_equivalence[state]['eq']
+            for transition in automata.transitions:
+                dst = previous_equivalence[state][transition.label] # esto me da a que estado se va por esta transicion
+            if 'eq' in current_equivalence[dst].keys(): # esto me da a que clase de equivalencia se va ahora
+                current_equivalence[state]['eq'] = current_equivalence[dst]['eq']
+            else:
+                current_equivalence[dst]['eq'] = next_eq # esto me genera una nueva clase de equivalencia
+                next_eq += 1
+            print(current_equivalence)
 
+        return current_equivalence
+
+    def remove_old_eq(self, previous_equivalence):
+        for state in previous_equivalence.keys():
+            previous_equivalence[state].pop('eq')
+        return previous_equivalence
+        
     def states_hash(self):
         states_hash = {}
         for transition in self.transitions:
