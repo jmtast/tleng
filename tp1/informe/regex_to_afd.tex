@@ -23,10 +23,41 @@ Para generar el autómata a través de la expresión regular, se va leyendo lín
 
 Para determinizar un AFND-$\lambda$ con Q conjunto de estados y $\sum$ alfabeto, se genera una tabla de Partes(Q) X $\sum$.\\
 Se comienza agregando la clausura-$\lambda$ del estado inicial a la tabla y, por cada letra del alfabeto, la clausura-$\lambda$ de los estados a los cuáles se puede llegar, empezando de algún estado en el conjunto de la clausura-$\lambda$ del estado inicial y avanzando por una transición con la letra correpsondiente.\\
-Para cada conjunto generado de esta manera, que no se haya calculado previamente, se agrega a la tabla se la misma forma.\\
+Para cada conjunto generado de esta manera, que no se haya calculado previamente, se agrega a la tabla de la misma forma.\\
 Cuando ya no quedan conjuntos por procesar, la tabla resultante se transforma a un AFD de la siguiente manera:\\
 Los conjuntos generados pasan a ser los estados, el primero será el estado inicial, todos aquellos conjuntos que contengan algún estado final del AFND-$\lambda$ serán los estados finales. Y la tabla indica las transiciones, para cada estado por cada letra a qué otro estado debe ir.
 
 
 \subsection{Minimizar}
-Juanma: Te toca ;)
+
+Para minimizar un AFD (en caso de ser AFND-$\lambda$, se utiliza la función para determinizarlo descripta en el punto anterior), se implementó el siguiente algoritmo:
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \Function{minimizar}{$A$}
+
+    \State $A \gets \textbf{removerEstadosNoAlcanzables}(A) $
+
+    \State $\textbf{equivalencia_{k-1}} \gets equivalencia_{0}$
+
+    \State $\textbf{equivalencia_{k}} \gets \textbf{siguienteEquivalencia(equivalencia_{k-1})}$
+    
+    \While $\textbf{equivalencia_{k-1}} \neq \textbf{equivalencia_{k}}$
+    
+    		\State $\textbf{equivalencia_{k}} \gets \textbf{siguienteEquivalencia(equivalencia_{k-1})}$
+
+    \EndWhile
+
+    \State \Return $A$
+  \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+%    minimization pseudocode:
+%    eliminate unreachable states (from q0)
+%    prepare 0-equivalence -> separate in two sets: final(F) and non-final(NF) states
+%    while previous equivalence != current equivalence:
+%      while there are unlooked pairs
+%        take two states from a previous equivalence partition and compare where they go through each transition
+%        if they differ, place them in separate sets
+%        else, place them in the same set
