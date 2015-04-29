@@ -434,7 +434,7 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
             if self.q0 in states:
                 minimized.q0 = idx
             for state in states:
-                if state in self.final_states:
+                if state in self.final_states and idx not in minimized.final_states:
                     minimized.final_states.append(idx)
             for char in self.alphabet:
                 first_state = next(iter(states))
