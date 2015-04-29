@@ -1,4 +1,5 @@
 import sys
+import copy
 
 LAMBDA = 'lambda'
 
@@ -315,7 +316,7 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
         file.write('\tnode [shape = circle];\n')
 
         # Hidden transition to q0
-        file.write('\tqd -> ' + inverse_translation[self.q0] + '\n')
+        file.write('\tqd -> ' + str(inverse_translation[self.q0]) + '\n')
 
         # Multiple transitions from a src to the same dst should be in one line
         for src in self.states:
@@ -326,17 +327,14 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
                         if transition.src == src and transition.dst == dst:
                             chars.add(transition.label)
                 if chars != set():
-                    file.write('\t' + inverse_translation[src] + ' -> ' + inverse_translation[dst] + ' [label="' + ','.join(chars) + '"]\n')
+                    file.write('\t' + str(inverse_translation[src]) + ' -> ' + str(inverse_translation[dst]) + ' [label="' + ','.join(chars) + '"]\n')
 
         file.write('}\n')
 
     def equivalent(self, other_automata):
         inter_comp = self.intersection(other_automata.complement())
 
-        if len(inter_comp.final_states) == 0:
-            print 'TRUE'
-        else:
-            print 'FALSE'
+        return len(inter_comp.final_states) == 0
 
     def __complete_transitions(self):
         trap = self.new_state_name()
@@ -365,7 +363,7 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
         #let's check if the chain is recognized by the automata
         #starting from the initial state
         state = self.q0
-        #for each char in the chain, check if the state can be transitioned 
+        #for each char in the chain, check if the state can be transitioned
         for c in chain:
             #two things can happen here
             #1- a transition if defined and therefore must be taken
@@ -386,3 +384,76 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
             return True
         else:
             return False
+
+    def minimize(self):
+        self.__complete_transitions()
+
+        previous_partition = set()
+        current_partition = set()
+        current_partition.add(frozenset([s for s in self.states if s not in self.final_states]))
+        current_partition.add(frozenset([s for s in self.states if s in self.final_states]))
+
+        while current_partition != previous_partition:
+            previous_partition = copy.deepcopy(current_partition)
+            current_partition = set()
+
+            for states in previous_partition:
+                cp_states = set([x for x in states])
+                new_partition = set()
+                new_partition.add(frozenset({cp_states.pop()}))
+                while len(cp_states) > 0:
+                    state = cp_states.pop()
+                    added = False
+
+                    to_remove = None
+                    to_add = None
+
+                    for new_states in new_partition:
+                        cp_new_states = set([x for x in new_states])
+                        for new_state in new_states:
+                            matches = reduce(lambda a, b: a and b, [self.__in_same_set(previous_partition, self.__dst(state, char), self.__dst(new_state, char)) for char in self.alphabet], True)
+                            if matches:
+                                added = True
+                                to_remove = new_states
+                                cp_new_states.add(state)
+                                to_add = cp_new_states.copy()
+
+                    if to_remove:
+                        new_partition.remove(to_remove)
+                        new_partition.add(frozenset(to_add))
+                    if not added:
+                        new_partition.add(frozenset({state}))
+
+                for states in new_partition:
+                    current_partition.add(states)
+
+        list_partition = list(current_partition)
+        minimized = DeterministicFiniteAutomata(range(0, len(list_partition)), self.alphabet)
+
+        for idx, states in enumerate(list_partition):
+            if self.q0 in states:
+                minimized.q0 = idx
+            for state in states:
+                if state in self.final_states:
+                    minimized.final_states.append(idx)
+            for char in self.alphabet:
+                first_state = next(iter(states))
+                old_dst = self.__dst(first_state, char)
+                new_dst = None
+                for idx_dst, states_dst in enumerate(list_partition):
+                    if old_dst in states_dst:
+                        new_dst = idx_dst
+                minimized.add_transition(char, idx, new_dst)
+
+        return minimized
+
+    def __dst(self, state, char):
+        for transition in self.transitions:
+            if transition.label == char and transition.src == state:
+                return transition.dst
+
+    def __in_same_set(self, partition, state1, state2):
+        for states in partition:
+            if state1 in states and state2 in states:
+                return True
+        return False

@@ -6,4 +6,4 @@ def equivalentes(archivo_automata1, archivo_automata2):
     auto1 = DeterministicFiniteAutomata.from_automata_file(archivo_automata1)
     auto2 = DeterministicFiniteAutomata.from_automata_file(archivo_automata2)
 
-    auto1.equivalent(auto2)
+    print 'TRUE' if auto1.equivalent(auto2) else 'FALSE'
