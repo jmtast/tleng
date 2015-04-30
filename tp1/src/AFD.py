@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 #!/usr/bin/python
 
 import sys
 import os
 
 from non_deterministic_finite_automata import *
-#from regexp import *
+from tests import run_all_tests
 from ejercicio_a import afd_minimo
 from ejercicio_b import pertenece_al_lenguaje
 from ejercicio_c import grafo
@@ -78,17 +78,21 @@ if __name__ == "__main__":
             archivo_automata2 = archivo_para_leer(parametros[4])
             equivalentes(archivo_automata1, archivo_automata2)
             sys.exit(0)
+        elif parametros_coinciden(parametros, "-test"):
+            run_all_tests()
+            sys.exit(0)
     except NotImplementedError:
         sys.exit("Funcionalidad no implementada.")
 
     print "Parametros invalidos."
     print "Uso:"
-    print 
+    print
     print "afd -leng <archivo_regex> -aut <archivo_automata>"
     print "afd -aut <archivo_automata> <cadena>"
     print "afd -aut <archivo_automata> -dot <archivo_dot>"
     print "afd -intersec -aut1 <archivo_automata> -aut2 <archivo_automata> -aut <archivo_automata>"
     print "afd -complemento -aut1 <archivo_automata> -aut <archivo_automata>"
     print "afd -equival -aut1 <archivo_automata> -aut2 <archivo_automata>"
+    print "afd -test"
 
     sys.exit(1)

@@ -262,7 +262,12 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
 
         q0 = translation[lines.pop(0).strip()]
 
-        final_states = [translation[qf] for qf in lines.pop(0).strip().split('\t')]
+        qfs = lines.pop(0).strip().split('\t')
+
+        if len(qfs[0]) > 0:
+            final_states = [translation[qf] for qf in qfs]
+        else:
+            final_states = []
 
         automata = DeterministicFiniteAutomata(range(0, len(states)), alphabet, [], q0, final_states)
         automata.translation = translation
@@ -332,9 +337,13 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
         file.write('}\n')
 
     def equivalent(self, other_automata):
-        inter_comp = self.intersection(other_automata.complement())
+        # We check both intersections with the complement for the border case
+        # when one is all posible combinations
 
-        return len(inter_comp.final_states) == 0
+        inter_comp1 = self.intersection(other_automata.complement())
+        inter_comp2 = other_automata.intersection(self.complement())
+
+        return len(inter_comp1.final_states) == 0 and len(inter_comp2.final_states) == 0
 
     def __complete_transitions(self):
         trap = self.new_state_name()
@@ -353,24 +362,30 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
                             self.translation['qt'] = trap
                     self.add_transition(char, state, trap)
 
-    def recognizes(self, chain):
+    def recognizes(self, string):
         #check if every character belongs to alphabet
-        for c in chain:
-            if not (c in self.alphabet):
+        for c in string:
+            # We keep tabs as a literal / followed by a t
+            if c == '\t':
+                c = '\\t'
+            if c not in self.alphabet:
                 return False
 
-        #if every char in the chain belongs to the alphabet
-        #let's check if the chain is recognized by the automata
+        #if every char in the string belongs to the alphabet
+        #let's check if the string is recognized by the automata
         #starting from the initial state
         state = self.q0
-        #for each char in the chain, check if the state can be transitioned
-        for c in chain:
+        #for each char in the string, check if the state can be transitioned
+        for c in string:
             #two things can happen here
             #1- a transition if defined and therefore must be taken
             #2- there is not a defined transition for this state through c
-            #meaning that the chain can't be recognized
+            #meaning that the string can't be recognized
             found = False
             for t in self.transitions:
+                # We keep tabs as a literal / followed by a t
+                if c == '\t':
+                    c = '\\t'
                 if t.src == state and t.label == c:
                     state = t.dst
                     found = True
@@ -379,7 +394,7 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
             if not found:
                 return False
 
-        #if the last state it's not final then the chain is not recognized
+        #if the last state it's not final then the string is not recognized
         if state in self.final_states:
             return True
         else:
@@ -388,6 +403,10 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
     def minimize(self):
         self.__complete_transitions()
 
+        self.__remove_unreachable_states()
+
+        # Frozensets are used because a set can't contain a mutable set
+        # All changes from set to frozenset and viceversa are hacks for this
         previous_partition = set()
         current_partition = set()
         current_partition.add(frozenset([s for s in self.states if s not in self.final_states]))
@@ -400,7 +419,8 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
             for states in previous_partition:
                 cp_states = set([x for x in states])
                 new_partition = set()
-                new_partition.add(frozenset({cp_states.pop()}))
+                if len(cp_states) > 0:
+                    new_partition.add(frozenset({cp_states.pop()}))
                 while len(cp_states) > 0:
                     state = cp_states.pop()
                     added = False
@@ -428,7 +448,7 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
                     current_partition.add(states)
 
         list_partition = list(current_partition)
-        minimized = DeterministicFiniteAutomata(range(0, len(list_partition)), self.alphabet)
+        minimized = DeterministicFiniteAutomata(range(0, len(list_partition)), self.alphabet, [], 0, [])
 
         for idx, states in enumerate(list_partition):
             if self.q0 in states:
@@ -443,7 +463,12 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
                 for idx_dst, states_dst in enumerate(list_partition):
                     if old_dst in states_dst:
                         new_dst = idx_dst
-                minimized.add_transition(char, idx, new_dst)
+                already_exists = False
+                for transition in minimized.transitions:
+                    if transition.src == idx and transition.label == char and transition.dst == new_dst:
+                        already_exists = True
+                if not already_exists:
+                    minimized.add_transition(char, idx, new_dst)
 
         return minimized
 
@@ -457,3 +482,21 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
             if state1 in states and state2 in states:
                 return True
         return False
+
+    def __remove_unreachable_states(self):
+        reachable = set()
+        pending_check = set({self.q0})
+
+        # Check which ones are reachable
+        while len(pending_check) > 0:
+            state = pending_check.pop()
+            reachable.add(state)
+
+            for transition in self.transitions:
+                if transition.src == state and transition.dst not in reachable:
+                    pending_check.add(transition.dst)
+
+        # Remove the others
+        self.states = [state for state in self.states if state in reachable]
+        self.final_states = [state for state in self.final_states if state in reachable]
+        self.transitions = [transition for transition in self.transitions if transition.src in reachable and transition.dst in reachable]
