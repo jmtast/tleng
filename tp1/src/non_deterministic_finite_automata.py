@@ -299,6 +299,8 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
         return automata
 
     def intersection(self, other_automata):
+        self.__unify_alphabets(other_automata)
+
         return self.complement().union(other_automata.complement()).determinize().complement()
 
     def print_dot(self, file = sys.stdout):
@@ -317,7 +319,9 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
 
         # Final states
         qfs = ';'.join([str(inverse_translation[qf]) for qf in self.final_states])
-        file.write('\tnode [shape = doublecircle]; ' + qfs + ';\n')
+        if len(qfs) > 0:
+            qfs += ';'
+        file.write('\tnode [shape = doublecircle]; ' + qfs + '\n')
         file.write('\tnode [shape = circle];\n')
 
         # Hidden transition to q0
@@ -337,6 +341,8 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
         file.write('}\n')
 
     def equivalent(self, other_automata):
+        self.__unify_alphabets(other_automata)
+
         # We check both intersections with the complement for the border case
         # when one is all posible combinations
 
@@ -361,6 +367,11 @@ class DeterministicFiniteAutomata(NonDeterministicFiniteAutomata):
                         if self.translation:
                             self.translation['qt'] = trap
                     self.add_transition(char, state, trap)
+
+    def __unify_alphabets(self, other_automata):
+        new_alphabet = self.alphabet + [char for char in other_automata.alphabet if char not in self.alphabet]
+        self.alphabet = new_alphabet
+        other_automata.alphabet = new_alphabet
 
     def recognizes(self, string):
         #check if every character belongs to alphabet
