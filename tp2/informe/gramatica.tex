@@ -1,22 +1,33 @@
 \section{Producciones}
-%  Start -> TempoDefinition BarDefinition Constants Voices
-%  TempoDefinition -> #tempo figure number
-%  BarDefinition -> #compas number/number
-%  Constants -> \lambda | const const_name=number; Constants
-%  Voices -> Voice MaybeVoices
-%  MaybeVoices -> \lambda | Voice MaybeVoices
-%  Voice -> voz (number) { bars } | voz (const_name) { Bars }
-%  Bars -> Bar MaybeBars
-%  MaybeBars -> \lambda | Bar MaybeBars
-%  Bar -> Repeat | compas { Notes }
-%  Repeat -> repetir (number) { bars } | repetir (const_name) { bars }
-%  Notes -> \lambda | silencio (figure MaybeDot); Notes | nota (note MaybeNoteModifier, number, figure MaybeDot); Notes | nota (note MaybeNoteModifier, const_name, figure MaybeDot); Notes
-%  MaybeDot -> \lambda | .
-%  MaybeNoteModifier -> \lambda | note_modifier
+Estas son las producciones utilizadas por nuestro parser para generar el \textit{AST} de la cadena de entrada. En \textbf{negrita} se resaltan los símbolos \textit{no terminales} para facilitar la lectura. \\
+\\
+\begin{tabular}{l l l}
+	\textbf{Start} & $\rightarrow$ & \textbf{TempoDefinition} \textbf{BarDefinition} \textbf{Constants} \textbf{Voices} \\
+	\textbf{TempoDefinition} & $\rightarrow$ & \#tempo figure number \\
+	\textbf{BarDefinition} & $\rightarrow$ & \#compas number/number \\
+	\textbf{Constants} & $\rightarrow$ & $\lambda$ $\vert$ const const\_name=number; \textbf{Constants} \\
+	\textbf{Voices} & $\rightarrow$ & \textbf{Voice} \textbf{MaybeVoices} \\
+	\textbf{MaybeVoices} & $\rightarrow$ & $\lambda$ $\vert$ \textbf{Voice} \textbf{MaybeVoices} \\
+	\textbf{Voice} & $\rightarrow$ & voz (number) { bars } $\vert$ voz (const\_name) { \textbf{Bars} } \\
+	\textbf{Bars} & $\rightarrow$ & \textbf{Bar} \textbf{MaybeBars} \\
+	\textbf{MaybeBars} & $\rightarrow$ & $\lambda$ $\vert$ \textbf{Bar} \textbf{MaybeBars} \\
+	\textbf{Bar} & $\rightarrow$ & \textbf{Repeat} $\vert$ compas { \textbf{Notes} } \\
+	\textbf{Repeat} & $\rightarrow$ & repetir (number) { bars } $\vert$ repetir (const\_name) { bars } \\
+	\textbf{Notes} & $\rightarrow$ & $\lambda$ $\vert$ silencio (figure \textbf{MaybeDot}); \textbf{Notes} $\vert$ \\
+	& & note\_call (note \textbf{MaybeNoteModifier}, number, figure \textbf{MaybeDot}); \textbf{Notes} $\vert$ \\
+	& & note\_call (note \textbf{MaybeNoteModifier}, const\_name, figure \textbf{MaybeDot}); \textbf{Notes} \\
+	\textbf{MaybeDot} & $\rightarrow$ & $\lambda$ $\vert$ . \\
+	\textbf{MaybeNoteModifier} & $\rightarrow$ & $\lambda$ $\vert$ note\_modifier \\
+\end{tabular}
 
 \subsection{Expresiones regulares de los tokens}
-% note_modifier = + | -
-% const_name = [a-zA-Z][_a-zA-Z0-9]*
-% number = [0-9]+
-% figure = redonda | blanca | negra | corchea | semicorchea | fusa | semifusa
-% note = do | re | mi | fa | sol | la | si
+
+El lado izquierdo de cada una de las siguientes líneas es el valor de un \textit{token} dado, y el lado derecho es la expresión regular que reconoce las cadenas que luego se transforman en el mismo al hacer la primera pasada del código con el lexer. \\
+
+\begin{tabular}{l l l}
+	note\_modifier & = & + $\vert$ - \\
+	const\_name & = & [a-zA-Z][a-zA-Z0-9]* \\
+	number & = & [0-9]+ \\
+	figure & = & redonda $\vert$ blanca $\vert$ negra $\vert$ corchea $\vert$ semicorchea $\vert$ fusa $\vert$ semifusa \\
+	note & = & do $\vert$ re $\vert$ mi $\vert$ fa $\vert$ sol $\vert$ la $\vert$ si \\
+\end{tabular}
