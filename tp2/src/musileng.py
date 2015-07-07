@@ -77,11 +77,16 @@ if __name__ == "__main__":
     text = input_file.read()
     input_file.close()
 
-    lexer = lex(module=lexer_rules)
-    parser = yacc(module=parser_rules)
-
-    ast = parser.parse(text, lexer)
-
     output_file = open(argv[2], "w")
-    translate_to_txt_midi(ast, output_file)
+
+    try:
+        lexer = lex(module=lexer_rules)
+        parser = yacc(module=parser_rules)
+
+        ast = parser.parse(text, lexer)
+
+        translate_to_txt_midi(ast, output_file)
+    except Exception as e:
+        print "Error:\n" + str(e)
+
     output_file.close()

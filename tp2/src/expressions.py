@@ -15,6 +15,13 @@ class Start(object):
         self.bar = bar
         self.voices = voices
 
+        for voice in self.get_voices():
+            for bar in voice.get_bars():
+                if bar.get_value() < self.bar.get_value():
+                    raise Exception("Compás con duración ({0}) más corta que la indicada ({1}). Línea {2}".format(bar.get_value(), self.bar.get_value(), bar.line))
+                if bar.get_value() > self.bar.get_value():
+                    raise Exception("Compás con duración ({0}) más larga que la indicada ({1}). Línea {2}".format(bar.get_value(), self.bar.get_value(), bar.line))
+
     def name(self):
         return "start"
 
@@ -25,9 +32,12 @@ class Start(object):
         return self.voices.get_arr_voices();
 
 class TempoDefinition(object):
-    def __init__(self, figure, speed):
+    def __init__(self, figure, speed, line):
         self.figure = figure
         self.speed = speed
+
+        if speed == 0:
+            raise Exception("Cantidad de repeticiones por minuto incorrecta. Debe ser mayor a 0. Línea {0}".format(line))
 
     def name(self):
         return "#tempo " + self.figure + " " + str(self.speed)
@@ -39,9 +49,15 @@ class TempoDefinition(object):
         return []
 
 class BarDefinition(object):
-    def __init__(self, beat, figure):
+    def __init__(self, beat, figure, line):
         self.beat = beat
         self.figure = figure
+
+        if beat == 0:
+            raise Exception("Cantidad de pulsos incorrecta. Debe ser mayor a 0. Línea {0}".format(line))
+
+        if figure not in figure_values.values():
+            raise Exception("Pulso incorrecto. Debe ser el valor de una figura: 1, 2, 4, 8, 16, 32, 64. Línea {0}".format(line))
 
     def name(self):
         return "#compas " + self.fraction()
@@ -51,6 +67,9 @@ class BarDefinition(object):
 
     def children(self):
         return []
+
+    def get_value(self):
+        return self.beat * (1 / float(self.figure))
 
 class Voices(object):
     def __init__(self, voice, other_voices):
@@ -74,9 +93,12 @@ class Voices(object):
         return voices
 
 class Voice(object):
-    def __init__(self, voice_number, bars):
+    def __init__(self, voice_number, bars, line):
         self.voice_number = voice_number
         self.bars = bars
+
+        if voice_number >= 128:
+            raise Exception("Instrumento inválido. Debe estar entre 0 y 127. Línea {0}".format(line))
 
     def name(self):
         return "voz " + str(self.voice_number)
@@ -111,8 +133,9 @@ class Bars(object):
         return bars
 
 class Bar(object):
-    def __init__(self, notes):
+    def __init__(self, notes, line):
         self.notes = notes
+        self.line = line
 
     def name(self):
         return "compas"
@@ -126,13 +149,25 @@ class Bar(object):
     def get_notes(self):
         return self.notes.get_arr_notes()
 
+    def get_value(self):
+        value = 0
+        for note in self.get_notes():
+            value +=  1 / float(note.get_value())
+            if note.dot is not None:
+                value += 0.5 / float(note.get_value())
+
+        return value
+
 # Un repetir puede ir en lugar de un compás, por lo tanto también implementa
 # get_arr_bars()
 
 class Repeat(object):
-    def __init__(self, times, bars):
+    def __init__(self, times, bars, line):
         self.times = times
         self.bars = bars
+
+        if times == 0:
+            raise Exception("Número de repeticiones incorrecto. Debe haber al menos 1. Línea {0}".format(line))
 
     def name(self):
         return "repetir " + str(self.times)
@@ -191,13 +226,16 @@ class Silence(object):
         return figure_values[self.figure]
 
 class Note(object):
-    def __init__(self, note, note_modifier, octave, figure, dot, other_notes):
+    def __init__(self, note, note_modifier, octave, figure, dot, other_notes, line):
         self.note = note
         self.note_modifier = note_modifier
         self.octave = octave
         self.figure = figure
         self.dot = dot
         self.other_notes = other_notes
+
+        if octave not in range(1,10):
+            raise Exception("Octava incorrecta. Debe estar entre 1 y 9. Línea {0}".format(line))
 
     def name(self):
         return "nota " + self.note + self.note_modifier_name() + " octava " + str(self.octave) + self.figure

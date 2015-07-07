@@ -11,11 +11,11 @@ def p_start(subexpressions):
 
 def p_tempo_definition(subexpressions):
     'tempo_definition : TEMPO_DEFINITION FIGURE NUMBER'
-    subexpressions[0] = TempoDefinition(subexpressions[2], subexpressions[3])
+    subexpressions[0] = TempoDefinition(subexpressions[2], subexpressions[3], subexpressions.lineno(1))
 
 def p_bar_definition(subexpressions):
     'bar_definition : BAR_DEFINITION NUMBER SLASH NUMBER'
-    subexpressions[0] = BarDefinition(subexpressions[2], subexpressions[4])
+    subexpressions[0] = BarDefinition(subexpressions[2], subexpressions[4], subexpressions.lineno(1))
 
 def p_constants_empty(subexpressions):
     'constants :'
@@ -49,13 +49,13 @@ def p_maybe_voices(subexpressions):
 
 def p_voice_number(subexpressions):
     'voice : VOICE_BLOCK LPAREN NUMBER RPAREN LBRACE bars RBRACE'
-    subexpressions[0] = Voice(subexpressions[3], subexpressions[6])
+    subexpressions[0] = Voice(subexpressions[3], subexpressions[6], subexpressions.lineno(1))
 
 def p_voice_constant(subexpressions):
     'voice : VOICE_BLOCK LPAREN CONST_NAME RPAREN LBRACE bars RBRACE'
     if subexpressions[3] not in constants:
         raise Exception("Constante no definida: {0}. Utilizada en línea {1}".format(subexpressions[3], subexpressions.lineno(1)))
-    subexpressions[0] = Voice(constants[subexpressions[3]], subexpressions[6])
+    subexpressions[0] = Voice(constants[subexpressions[3]], subexpressions[6], subexpressions.lineno(1))
 
 # Con Bars se hace lo mismo que con Voices para requerir al menos un compas
 
@@ -77,17 +77,17 @@ def p_bar_repeat(subexpressions):
 
 def p_bar(subexpressions):
     'bar : BAR_BLOCK LBRACE notes RBRACE'
-    subexpressions[0] = Bar(subexpressions[3])
+    subexpressions[0] = Bar(subexpressions[3], subexpressions.lineno(1))
 
 def p_repeat_number(subexpressions):
     'repeat : REPEAT_BLOCK LPAREN NUMBER RPAREN LBRACE bars RBRACE'
-    subexpressions[0] = Repeat(subexpressions[3], subexpressions[6])
+    subexpressions[0] = Repeat(subexpressions[3], subexpressions[6], subexpressions.lineno(1))
 
 def p_repeat_constant(subexpressions):
     'repeat : REPEAT_BLOCK LPAREN CONST_NAME RPAREN LBRACE bars RBRACE'
     if subexpressions[3] not in constants:
         raise Exception("Constante no definida: {0}. Utilizada en línea {1}".format(subexpressions[3], subexpressions.lineno(1)))
-    subexpressions[0] = Repeat(constants[subexpressions[3]], subexpressions[6])
+    subexpressions[0] = Repeat(constants[subexpressions[3]], subexpressions[6], subexpressions.lineno(1))
 
 def p_notes_empty(subexpressions):
     'notes :'
@@ -99,13 +99,13 @@ def p_notes_silence(subexpressions):
 
 def p_notes_note_number(subexpressions):
     'notes : NOTE_CALL LPAREN NOTE maybe_note_modifier COMMA NUMBER COMMA FIGURE maybe_dot RPAREN SEMICOLON notes'
-    subexpressions[0] = Note(subexpressions[3], subexpressions[4], subexpressions[6], subexpressions[8], subexpressions[9], subexpressions[12])
+    subexpressions[0] = Note(subexpressions[3], subexpressions[4], subexpressions[6], subexpressions[8], subexpressions[9], subexpressions[12], subexpressions.lineno(1))
 
 def p_notes_note_constant(subexpressions):
     'notes : NOTE_CALL LPAREN NOTE maybe_note_modifier COMMA CONST_NAME COMMA FIGURE maybe_dot RPAREN SEMICOLON notes'
     if subexpressions[6] not in constants:
         raise Exception("Constante no definida: {0}. Utilizada en línea {1}".format(subexpressions[6], subexpressions.lineno(1)))
-    subexpressions[0] = Note(subexpressions[3], subexpressions[4], constants[subexpressions[6]], subexpressions[8], subexpressions[9], subexpressions[12])
+    subexpressions[0] = Note(subexpressions[3], subexpressions[4], constants[subexpressions[6]], subexpressions[8], subexpressions[9], subexpressions[12], subexpressions.lineno(1))
 
 def p_maybe_dot_empty(subexpressions):
     'maybe_dot :'
