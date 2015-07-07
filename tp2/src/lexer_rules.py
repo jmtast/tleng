@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 tokens = [
     'TEMPO_DEFINITION',
     'BAR_DEFINITION',
@@ -40,6 +41,7 @@ t_NOTE_CALL = r"nota"
 t_SILENCE = r"silencio"
 t_DOT = r"\."
 t_NOTE_MODIFIER = r"(\+|\-)"
+# Cualquier nombre excepto las keywords de la gramática
 t_CONST_NAME = r"(?!(const|voz|nota|repetir|compas|silencio))[a-zA-Z][_a-zA-Z0-9]*"
 t_COMMA = r","
 
@@ -56,20 +58,17 @@ def t_FIGURE(token):
 
 def t_NOTE(token):
     r"(?!(redonda|repetir|silencio))(do|re|mi|fa|sol|la|si)"
+    # La negación es necesaria porque sino toma las notas primero
+    # Ya se probó cambiar el orden y no funcionó
     return token
 
 def t_NEWLINE(token):
     r"\n+"
     token.lexer.lineno += len(token.value)
 
-def t_error(token):
-    message = "Token desconocido:"
-    message += "\ntype:" + token.type
-    message += "\nvalue:" + str(token.value)
-    message += "\nline:" + str(token.lineno)
-    message += "\nposition:" + str(token.lexpos)
-    raise Exception(message)
-
 def t_IGNORE_COMMENTS(token):
     r"//(.*)\n"
     token.lexer.lineno += 1
+
+def t_error(token):
+    raise Exception("Error de sintaxis: Token desconocido en línea {0}. \"{1}\"".format(token.lineno, token.value.partition("\n")[0]))

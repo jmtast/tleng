@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import lexer_rules
+import parser_rules
+
+from sys import argv, exit
+
+from ply.lex import lex
+from ply.yacc import yacc
+
+clicks_per_beat = 384
+
+def translate_to_txt_midi(ast, output):
+    write_header(ast, output)
+
+    for idx, voice in enumerate(ast.get_voices()):
+        write_voice(ast, idx, voice, output)
+
+
+def write_header(ast, output):
+    num_tracks = len(ast.get_voices()) + 1
+    output.write("MFile 1 {0} {1}\n".format(num_tracks, clicks_per_beat))
+    output.write("MTrk\n")
+    output.write("000:00:000 TimeSig {0} 24 8\n".format(ast.bar.fraction()))
+    output.write("000:00:000 Tempo {0}\n".format(ast.tempo.milliseconds()))
+    output.write("000:00:000 Meta TrkEnd\n")
+    output.write("TrkEnd\n")
+
+def write_voice(ast, voice_idx, voice, output):
+    output.write("MTrk\n")
+    output.write("000:00:000 Meta TrkName \"Voz {0}\"\n".format(voice_idx + 1))
+    output.write("000:00:000 ProgCh ch={0} prog={1}\n".format(voice_idx + 1, voice.voice_number))
+
+    for bar_idx, bar in enumerate(voice.get_bars()):
+        last_bar, last_beat, last_click = write_bar(ast, voice_idx, bar_idx, bar, output)
+
+    output.write("%03d:%02d:%03d Meta TrkEnd\n" % (last_bar, last_beat, last_click))
+    output.write("TrkEnd\n")
+
+def write_bar(ast, voice_idx, bar_idx, bar, output):
+    beat = 0
+    click = 0
+    for note in bar.get_notes():
+        # note podría ser una nota o un silencio
+        if note.__class__.__name__ is 'Note':
+            output.write("%03d:%02d:%03d On     ch=%d note=%s vol=70\n" % (bar_idx, beat, click, voice_idx + 1, note))
+
+        # La duración se calcula haciendo regla de 3 del valor contra la figura
+        # de la definición del compás
+        duration = int(clicks_per_beat * ast.bar.figure / float(note.get_value()))
+        # Y se agrega media figura si hay un puntillo
+        if note.dot is not None:
+            duration += int(clicks_per_beat * ast.bar.figure / float(note.get_value() * 2))
+        # Se aumentan los clicks, pulsos y el compás, teniendo en cuenta que
+        # los clicks son módulo 384 y los pulsos según lo que se indique en la
+        # definición del compás
+        click += duration
+        beat += click / clicks_per_beat
+        click %= clicks_per_beat
+        bar_idx += beat / ast.bar.beat
+        beat %= ast.bar.beat
+
+        if note.__class__.__name__ is 'Note':
+            output.write("%03d:%02d:%03d Off    ch=%d note=%s vol=0\n" % (bar_idx, beat, click, voice_idx + 1, note))
+
+    return bar_idx, beat, click
+
+if __name__ == "__main__":
+    if len(argv) != 3:
+        print "Parametros invalidos."
+        print "Uso:"
+        print "  musileng.py archivo_entrada archivo_salida"
+        exit()
+
+    input_file = open(argv[1], "r")
+    text = input_file.read()
+    input_file.close()
+
+    lexer = lex(module=lexer_rules)
+    parser = yacc(module=parser_rules)
+
+    ast = parser.parse(text, lexer)
+
+    output_file = open(argv[2], "w")
+    translate_to_txt_midi(ast, output_file)
+    output_file.close()

@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+figure_values = {
+    "redonda": 1,
+    "blanca": 2,
+    "negra": 4,
+    "corchea": 8,
+    "semicorchea": 16,
+    "fusa": 32,
+    "semifusa": 64
+}
+
 class Start(object):
     def __init__(self, tempo, bar, voices):
         self.tempo = tempo
@@ -10,6 +21,9 @@ class Start(object):
     def children(self):
         return [self.tempo, self.bar, self.voices]
 
+    def get_voices(self):
+        return self.voices.get_arr_voices();
+
 class TempoDefinition(object):
     def __init__(self, figure, speed):
         self.figure = figure
@@ -17,6 +31,9 @@ class TempoDefinition(object):
 
     def name(self):
         return "#tempo " + self.figure + " " + str(self.speed)
+
+    def milliseconds(self):
+        return int(1000000 * 60 * figure_values[self.figure] / (4 * float(self.speed)))
 
     def children(self):
         return []
@@ -27,7 +44,10 @@ class BarDefinition(object):
         self.figure = figure
 
     def name(self):
-        return "#compas " + str(self.beat) + "/" + str(self.figure)
+        return "#compas " + self.fraction()
+
+    def fraction(self):
+        return str(self.beat) + "/" + str(self.figure)
 
     def children(self):
         return []
@@ -46,6 +66,13 @@ class Voices(object):
         else:
             return [self.voice, self.other_voices]
 
+    def get_arr_voices(self):
+        voices = [self.voice]
+        if self.other_voices is not None:
+            voices += self.other_voices.get_arr_voices()
+
+        return voices
+
 class Voice(object):
     def __init__(self, voice_number, bars):
         self.voice_number = voice_number
@@ -56,6 +83,9 @@ class Voice(object):
 
     def children(self):
         return [self.bars]
+
+    def get_bars(self):
+        return self.bars.get_arr_bars()
 
 class Bars(object):
     def __init__(self, bar, other_bars):
@@ -71,6 +101,15 @@ class Bars(object):
         else:
             return [self.bar, self.other_bars]
 
+        return voices
+
+    def get_arr_bars(self):
+        bars = self.bar.get_arr_bars()
+        if self.other_bars is not None:
+            bars += self.other_bars.get_arr_bars()
+
+        return bars
+
 class Bar(object):
     def __init__(self, notes):
         self.notes = notes
@@ -80,6 +119,15 @@ class Bar(object):
 
     def children(self):
         return [self.notes]
+
+    def get_arr_bars(self):
+        return [self]
+
+    def get_notes(self):
+        return self.notes.get_arr_notes()
+
+# Un repetir puede ir en lugar de un compás, por lo tanto también implementa
+# get_arr_bars()
 
 class Repeat(object):
     def __init__(self, times, bars):
@@ -91,6 +139,9 @@ class Repeat(object):
 
     def children(self):
         return [self.bars]
+
+    def get_arr_bars(self):
+        return self.bars.get_arr_bars() * self.times
 
 class Dot(object):
     def __init__(self, dot):
@@ -123,11 +174,21 @@ class Silence(object):
 
     def children(self):
         result = []
-        if self.dot != None:
+        if self.dot is not None:
             result.append(self.dot)
-        if self.other_notes != None:
+        if self.other_notes is not None:
             result.append(self.other_notes)
         return result
+
+    def get_arr_notes(self):
+        notes = [self]
+        if self.other_notes is not None:
+            notes += self.other_notes.get_arr_notes()
+
+        return notes
+
+    def get_value(self):
+        return figure_values[self.figure]
 
 class Note(object):
     def __init__(self, note, note_modifier, octave, figure, dot, other_notes):
@@ -139,14 +200,44 @@ class Note(object):
         self.other_notes = other_notes
 
     def name(self):
-        return "nota " + self.note + " octava " + str(self.octave) + self.figure
+        return "nota " + self.note + self.note_modifier_name() + " octava " + str(self.octave) + self.figure
 
     def children(self):
         result = []
-        if self.note_modifier != None:
+        if self.note_modifier is not None:
             result.append(self.note_modifier)
-        if self.dot != None:
+        if self.dot is not None:
             result.append(self.dot)
-        if self.other_notes != None:
+        if self.other_notes is not None:
             result.append(self.other_notes)
         return result
+
+    def get_arr_notes(self):
+        notes = [self]
+        if self.other_notes is not None:
+            notes += self.other_notes.get_arr_notes()
+
+        return notes
+
+    def note_modifier_name(self):
+        note_modifier = ""
+        if self.note_modifier is not None:
+            note_modifier = self.note_modifier.name()
+
+        return note_modifier
+
+    def __str__(self):
+        translation_notes = {
+            "do": "c",
+            "re": "d",
+            "mi": "e",
+            "fa": "f",
+            "sol": "g",
+            "la": "a",
+            "si": "b"
+        }
+
+        return translation_notes[self.note] + self.note_modifier_name() + str(self.octave)
+
+    def get_value(self):
+        return figure_values[self.figure]

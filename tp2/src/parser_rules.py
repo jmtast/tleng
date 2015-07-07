@@ -30,6 +30,11 @@ def p_constants(subexpressions):
         raise Exception("Constante redefinida: {0}. Primera vez definida en línea {1}".format(name, subexpressions.lineno(1)))
     constants[name] = value
 
+# Las siguientes producciones:
+#     Voices -> Voice MaybeVoices
+#     MaybeVoices -> λ | Voice MaybeVoices
+# Son para requerir que exista 1 voz al nivel de la gramática
+
 def p_voices(subexpressions):
     'voices : voice maybe_voices'
     subexpressions[0] = Voices(subexpressions[1], subexpressions[2])
@@ -52,6 +57,8 @@ def p_voice_constant(subexpressions):
         raise Exception("Constante no definida: {0}. Utilizada en línea {1}".format(subexpressions[3], subexpressions.lineno(1)))
     subexpressions[0] = Voice(constants[subexpressions[3]], subexpressions[6])
 
+# Con Bars se hace lo mismo que con Voices para requerir al menos un compas
+
 def p_bars(subexpressions):
     'bars : bar maybe_bars'
     subexpressions[0] = Bars(subexpressions[1], subexpressions[2])
@@ -66,7 +73,7 @@ def p_maybe_bars(subexpressions):
 
 def p_bar_repeat(subexpressions):
     'bar : repeat'
-    subexpressions[0] = subexpressions[1] # TODO: acá puede haber problema
+    subexpressions[0] = subexpressions[1]
 
 def p_bar(subexpressions):
     'bar : BAR_BLOCK LBRACE notes RBRACE'
@@ -117,4 +124,4 @@ def p_maybe_note_modifier(subexpressions):
     subexpressions[0] = NoteModifier(subexpressions[1])
 
 def p_error(subexpressions):
-    raise Exception("Syntax error.")
+    raise Exception("Error de sintaxis en línea {0}".format(subexpressions.lineno))
