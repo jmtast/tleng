@@ -1,0 +1,22 @@
+\section{Producciones}
+%  Start -> TempoDefinition BarDefinition Constants Voices
+%  TempoDefinition -> #tempo figure number
+%  BarDefinition -> #compas number/number
+%  Constants -> \lambda | const const_name=number; Constants
+%  Voices -> Voice MaybeVoices
+%  MaybeVoices -> \lambda | Voice MaybeVoices
+%  Voice -> voz (number) { bars } | voz (const_name) { Bars }
+%  Bars -> Bar MaybeBars
+%  MaybeBars -> \lambda | Bar MaybeBars
+%  Bar -> Repeat | compas { Notes }
+%  Repeat -> repetir (number) { bars } | repetir (const_name) { bars }
+%  Notes -> \lambda | silencio (figure MaybeDot); Notes | note_call (note MaybeNoteModifier, number, figure MaybeDot); Notes | note_call (note MaybeNoteModifier, const_name, figure MaybeDot); Notes
+%  MaybeDot -> \lambda | .
+%  MaybeNoteModifier -> \lambda | note_modifier
+
+\subsection{Expresiones regulares de los tokens}
+% note_modifier = + | -
+% const_name = [a-zA-Z][_a-zA-Z0-9]*
+% number = [0-9]+
+% figure = redonda | blanca | negra | corchea | semicorchea | fusa | semifusa
+% note = do | re | mi | fa | sol | la | si
