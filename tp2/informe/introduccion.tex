@@ -1,3 +1,15 @@
 \section{Introducción}
 
+El presente trabajo práctico consiste en implementar diversos elementos vistos en la materia para, en última instancia, poder traducir un lenguaje de composición musical llamado \textbf{Musileng} que tendrá como salida un archivo que se transformará a formato \textbf{MIDI} que se puede escuchar en cualquier reproductor que soporte dicho estándar.\\
+
+Dichos elementos implementados por el grupo, son:
+\begin{itemize}
+	\item \textbf{Gramática}: Primero se creó la gramática que representará la forma de generar cualquier cadena aceptada por nuestro lenguaje.
+	\item \textbf{Lexer}: En base a la gramática, se hizo el Lexer. El Lexer se encarga de separar la cadena de entrada en distintos \textbf{tokens}.
+	\item \textbf{Parser}: La salida del Lexer es utilizada por el \textbf{Parser}, que se encarga de generar el \textbf{AST} (\textit{Abstract Syntax Tree}).
+	\item \textbf{Traductor}: Finalmente mediante el \textbf{Traductor}, se genera el archivo de salida necesario para poder utilizarlo como entrada del programa generador de MIDI llamado \textbf{midicomp}.
+\end{itemize}
+
+En las secciones subsiguientes se explica con más detalle cada una de estas partes desarrolladas en el trabajo práctico.
+
 \clearpage
