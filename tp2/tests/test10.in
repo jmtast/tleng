@@ -1,0 +1,13 @@
+// Error de semántica: Instrumento mayor a 127
+#tempo negra 120
+#compas 2/4
+
+const oct1 = 5;
+
+voz (128)
+{
+  compas
+  {
+    silencio(blanca);
+  }
+}

@@ -5,6 +5,7 @@ import lexer_rules
 import parser_rules
 
 from sys import argv, exit
+import sys
 
 from ply.lex import lex
 from ply.yacc import yacc
@@ -87,6 +88,7 @@ if __name__ == "__main__":
 
         translate_to_txt_midi(ast, output_file)
     except Exception as e:
-        print "Error:\n" + str(e)
+        print >>sys.stderr, "Error:\n" + str(e)
+        exit(1)
 
     output_file.close()

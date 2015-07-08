@@ -1,0 +1,125 @@
+// Error de semántica: más de 16 voces
+#tempo negra 120
+#compas 2/4
+
+const oct1=5;
+
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}

@@ -1,0 +1,12 @@
+// Error de semántica: 0 pulsos
+#tempo negra 120
+#compas 0/4
+
+const oct1 = 5;
+
+voz (0)
+{
+  compas
+  {
+  }
+}

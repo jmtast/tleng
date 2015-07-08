@@ -1,0 +1,13 @@
+// Error de semántica: Compás más corto de lo indicado
+#tempo negra 120
+#compas 2/4
+
+const oct1 = 5;
+
+voz (0)
+{
+  compas
+  {
+    silencio(fusa);
+  }
+}

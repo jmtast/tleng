@@ -1,0 +1,13 @@
+// Error de semántica: Pulso valor no igual a una figura
+#tempo negra 120
+#compas 2/5
+
+const oct1 = 5;
+
+voz (0)
+{
+  compas
+  {
+    silencio(blanca);
+  }
+}

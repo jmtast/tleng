@@ -1,0 +1,14 @@
+// Error de sintaxis: Falta ;
+#tempo negra 120
+#compas 2/4
+
+const oct1 = 5;
+const oct2 = 6
+
+voz (0)
+{
+  compas
+  {
+    nota(re, oct1, blanca);
+  }
+}
