@@ -1,3 +1,17 @@
 \section{Tests}
 
+Para comprobar el funcionamiento correcto de \textbf{Musileng}, se crearon varios casos de tests.\\
+\\
+En el directorio $tests/$ se encuentran los tests de casos dónde se debe devolver un error:\\
+\begin{itemize}
+\item Error de sintaxis cuando hay una cadena que no se puede tokenizar
+\item Error de sintaxis cuando una cadena no coincide con ninguna producción
+\item Errores de semántica: Instrumentos y octavas fuera de rango, tempos y repeticiones con valor 0, etc.
+\end{itemize}
+
+Y en el directorio $examples/$ se encuentran tests de casos favorables, modificados de los ejemplos de la cátedra para incluir más detalles, por ejemplo, repeticiones anidadas.\\
+\\
+Se pueden comprobar los tests corriendo:
+\indent \textbf{./tests.sh}
+
 \clearpage
