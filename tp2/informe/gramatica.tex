@@ -1,5 +1,19 @@
-\section{Producciones}
+\section{Gramática}
+
+La Gramática desarrolada es la siguiente: $\langle V_n,\ V_t,\ Producciones,\ Start \rangle$
+
+\subsection{Símbolos No Terminales}
+
+Start, TempoDefinition, BarDefinition, Constants, Voices, MaybeVoices, Voice, Bars, MaybeBars, Bar, Repeat, Notes, MaybeDot, MaybeNoteModifier.
+
+\subsection{Símbolos Terminales}
+
+#tempo, #compas, '/', const, const_name, figure, number, ';', voz, '\(', '\)', '\{', '\}', compas, repetir, silencio, nota, note, '.', ',', note_modifier.
+
+\subsection{Producciones}
 Estas son las producciones utilizadas por nuestro parser para generar el \textit{AST} de la cadena de entrada. En \textbf{negrita} se resaltan los símbolos \textit{no terminales} para facilitar la lectura. \\
+\\
+Se decidió requerir que exista al menos una voz y un compás por voz a nivel de la Gramática. \\
 \\
 \begin{tabular}{l l l}
 	\textbf{Start} & $\rightarrow$ & \textbf{TempoDefinition} \textbf{BarDefinition} \textbf{Constants} \textbf{Voices} \\

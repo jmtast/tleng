@@ -15,7 +15,11 @@ class Start(object):
         self.bar = bar
         self.voices = voices
 
-        for voice in self.get_voices():
+        arr_voices = self.get_voices()
+        if len(arr_voices) > 16:
+            raise Exception("No se permiten más de 16 voces. Línea {0}".format(arr_voices[16].line))
+
+        for voice in arr_voices:
             for bar in voice.get_bars():
                 if bar.get_value() < self.bar.get_value():
                     raise Exception("Compás con duración ({0}) más corta que la indicada ({1}). Línea {2}".format(bar.get_value(), self.bar.get_value(), bar.line))
@@ -96,6 +100,7 @@ class Voice(object):
     def __init__(self, voice_number, bars, line):
         self.voice_number = voice_number
         self.bars = bars
+        self.line = line
 
         if voice_number >= 128:
             raise Exception("Instrumento inválido. Debe estar entre 0 y 127. Línea {0}".format(line))
